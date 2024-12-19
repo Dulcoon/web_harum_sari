@@ -1,0 +1,18 @@
+fetch("/api/provinces")
+.then((response) => response.json())
+.then((data) => {
+  const provinces = data.data;  // Access the "data" property if it's an object
+  if (Array.isArray(provinces)) {
+    provinces.forEach((provinsi) => {
+      const option = document.createElement("option");
+      option.value = provinsi.id;
+      option.textContent = provinsi.name;
+      provinsiSelect.appendChild(option);
+    });
+  } else {
+    console.error("Data is not an array:", provinces);
+  }
+})
+.catch((error) => {
+  console.error("Error fetching data:", error);
+});
