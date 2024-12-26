@@ -68,14 +68,16 @@
     @endphp
      </div>
       @else
-     <p>Product not found</p>
+     <p>Product tidak ditemukan</p>
+     <p>Product tidak ditemukan</p>
+     <p>Product tidak ditemukan</p>
       @endif
     </div>
     <div>
     <form method="POST" action="{{ route('cart.remove') }}">
   @csrf
-  @method('DELETE') <!-- Menggunakan metode DELETE secara eksplisit -->
-  <input type="hidden" name="product_id" value="{{ $item['product_id'] }}"> <!-- Kirimkan product_id -->
+  @method('DELETE') 
+  <input type="hidden" name="product_id" value="{{ $item['product_id'] }}"> 
   <button class="text-red-500 hover:text-red-700">Remove</button>
 </form>
 
