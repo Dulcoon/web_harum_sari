@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\sendEmailController;
+use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Controllers\Api\AuthController;
@@ -57,6 +58,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->middleware('auth')->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 });
 
 
@@ -94,6 +101,10 @@ Route::get('/api/products', [ProductApiController::class, 'index']);
 
 // Route untuk detail produk
 Route::get('/api/products/{id}', [ProductApiController::class, 'show']);
+
+
+
+
 
 
 

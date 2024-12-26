@@ -47,57 +47,59 @@ class CategoryController extends Controller
         return redirect()->route("category.index")->with("success", "Produk berhasil ditambahkan!");
     }
     
+
+    public function update(Request $request, $id)
+{
+    // Validasi input
+    $this->validate($request, [
+        "nama" => "required|string|max:255",
+        "thumbnail" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
+    ]);
+
+    // Temukan kategori berdasarkan ID
+    $category = Kategori::findOrFail($id);
+
+    // Update nama kategori hanya jika ada perubahan
+    if ($request->nama !== $category->nama) {
+        $category->nama = $request->nama;
+    }
+
+    // Periksa apakah ada file thumbnail yang diunggah
+    if ($request->hasFile('thumbnail')) {
+        // Hapus thumbnail lama jika ada dan bukan default 'no_image.png'
+        if ($category->thumbnail && $category->thumbnail !== 'no_image.png') {
+            Storage::disk('public')->delete($category->thumbnail);
+        }
+
+        // Simpan thumbnail baru
+        $thumbnail = $request->file('thumbnail');
+        $thumbnailPath = $thumbnail->storeAs('categories', $thumbnail->hashName(), 'public');
+        $category->thumbnail = $thumbnailPath;
+    }
+
+    // Simpan perubahan
+    $category->save();
+
+    // Kembalikan ke halaman daftar kategori dengan pesan sukses
+    return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui!');
+}
+
+
+
+
     public function edit($id)
     {
         $categories = Kategori::findOrFail($id);
     
-        return view('kategori.editKategori', compact( 'categories'));
+        return view('kategori.editKategori', compact('categories'));
     }
+    
     public function detail($id)
     {
         $product = Product::with('kategori')->findOrFail($id);
     
-    
         return view('products.detail', compact('product'));
     }
-
-
-    
-    
-    public function update(Request $request, kategori $categories)
-    {
-        // Validasi input, thumbnail tidak wajib diubah
-        $this->validate($request, [
-            "nama" => "required|string|max:255",
-            "thumbnail" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
-        ]);
-    
-        // Update nama kategori
-        $categories->nama = $request->nama;
-    
-        // Periksa apakah ada file thumbnail yang diunggah
-        if ($request->hasFile("thumbnail")) {
-            // Hapus thumbnail lama jika bukan default 'no_image.png'
-            if ($categories->thumbnail && $categories->thumbnail !== 'no_image.png') {
-                Storage::disk('public')->delete($categories->thumbnail);
-            }
-    
-            // Simpan thumbnail baru
-            $thumbnail = $request->file("thumbnail");
-            $thumbnailPath = $thumbnail->storeAs('products', $thumbnail->hashName(), 'public');
-            $categories->thumbnail = $thumbnailPath;
-        } else {
-            // Jika tidak ada file baru, gunakan thumbnail lama dari hidden input
-            $categories->thumbnail = $request->old_thumbnail;
-        }
-    
-        // Simpan perubahan
-        $categories->save();
-    
-        return redirect()->route("category.index")->with("success", "Kategori berhasil diupdate!");
-    }
-    
-    
     
     
     public function destroy(kategori $categories)
