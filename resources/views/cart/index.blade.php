@@ -69,8 +69,6 @@
      </div>
       @else
      <p>Product tidak ditemukan</p>
-     <p>Product tidak ditemukan</p>
-     <p>Product tidak ditemukan</p>
       @endif
     </div>
     <div>
