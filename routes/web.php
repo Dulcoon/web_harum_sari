@@ -10,17 +10,14 @@ use App\Http\Controllers\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Controllers\Api\AuthController;
-// use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-// use Illuminate\Routing\Middleware\ThrottleRequests;
-// use Illuminate\Routing\Middleware\SubstituteBindings;
-// use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CartApiController;
+use App\Http\Controllers\CheckoutController;
+
+use App\Http\Controllers\TransactionApiController;
+use App\Http\Controllers\MidtransController;
 
 
-    
 
-// Route::get('/category/{kategori}', [HomeController::class, 'category'])->name(name: 'home.category');
-    
-// Route::get('/product', [HomeController::class, 'product'])->name(name: 'homepage.product');
 
 
 Route::get('/contact-us', [sendEmailController::class, 'showForm'])->name('email.form');
@@ -61,9 +58,26 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->middleware('auth')->name('cart.add');
+    
+    
+    
+    
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/createMidtransToken', [CheckoutController::class, 'createMidtransToken'])->name('checkout.createMidtransToken');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/pending', [CheckoutController::class, 'pending'])->name('checkout.pending');
+    
+    
+    Route::post('/checkout/createSnapToken', [CheckoutController::class, 'createSnapToken'])->name('checkout.createSnapToken');
+    
+
+
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+
+    
 });
 
 
@@ -92,6 +106,11 @@ Route::prefix('api')->group(function () {
         Route::post('/customers', [UserController::class, 'store']);
         Route::put('/customers/{id}', [UserController::class, 'update']);
         Route::delete('/customers/{id}', [UserController::class, 'destroy']);
+
+
+        Route::post('/transactions', [TransactionApiController::class, 'createTransaction']);
+        Route::get('/transactions/{orderId}/status', [TransactionApiController::class, 'getTransactionStatus']);
+        Route::post('/transactions/callback', [TransactionApiController::class, 'paymentCallback']);
     });
 });
 
@@ -103,9 +122,25 @@ Route::get('/api/products', [ProductApiController::class, 'index']);
 Route::get('/api/products/{id}', [ProductApiController::class, 'show']);
 
 
+Route::post('/api/cart/add', [CartApiController::class, 'add'])->name('cart.add');
+Route::middleware('auth:sanctum')->get('/api/cart', [CartApiController::class, 'index'])->name('cart.index');
+
+Route::delete('/api/cart/remove', [CartApiController::class, 'remove'])->name('cart.remove');
+Route::put('/api/cart/update', [CartApiController::class, 'update'])->name('cart.update');
+
+
+Route::get('/success', [MidtransController::class, 'success'])->name('success');
+Route::post('/api/notification', [MidtransController::class, 'handleNotification'])->name('notification');
+
+
+Route::post('/api/transaction', [MidtransController::class, 'createTransaction']);
+Route::get('/api/transactions/{userId}', [MidtransController::class, 'getTransactionsByUserId']);
 
 
 
+Route::middleware('auth:sanctum')->group(function () {
+   
+});
 
 
 require __DIR__.'/auth.php';

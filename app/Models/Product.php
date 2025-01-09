@@ -13,11 +13,22 @@ class Product extends Model
         'kategori_id',
         'featured_products',
         'foto',
+        'stok',
     ];
 
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 
 }

@@ -43,12 +43,12 @@ class ProductController extends Controller
             "kategori_id" => "required",
             "featured_products" => "required|bool",
             "foto" => "required|image|mimes:jpeg,png,jpg",
+            "stok" => "required|integer|min:0", // Validasi stok
         ]);
     
         $foto = $request->file("foto");
-    
         $fotoPath = $foto->storeAs('', $foto->hashName(), 'public');
-
+    
         Product::create([
             "nama" => $request->nama,
             "harga" => $request->harga,
@@ -56,6 +56,7 @@ class ProductController extends Controller
             "kategori_id" => $request->kategori_id,
             "featured_products" => $request->featured_products,
             "foto" => $foto->hashName(),
+            "stok" => $request->stok, // Simpan stok
         ]);
     
         return redirect()->route("products.index")->with("success", "Produk berhasil ditambahkan!");
@@ -90,6 +91,7 @@ class ProductController extends Controller
             "kategori_id" => "required",
             "featured_products" => "required|bool",
             "foto" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
+            "stok" => "required|integer|min:0",
         ]);
     
         // Update data produk
@@ -98,6 +100,7 @@ class ProductController extends Controller
         $product->deskripsi = $request->deskripsi;
         $product->kategori_id = $request->kategori_id;
         $product->featured_products = $request->featured_products;
+        $product->stok = $request->stok;
     
         if ($request->hasFile("foto")) {
             if ($product->foto && $product->foto !== 'no_image.png') {

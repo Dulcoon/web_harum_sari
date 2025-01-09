@@ -5,29 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class CartController extends Controller
 {
     public function index()
     {
-        // Ambil cart dari session
-        $cartItems = Session::get('cartItems', []);
-    
-        // Ambil data produk berdasarkan cart
+        $cartItems = Session::get('cartItems', []); // Ambil data dari session (hanya ID produk & kuantitas)
         $products = [];
+        $totalPrice = 0;
+    
         foreach ($cartItems as $productId => $quantity) {
-            $product = Product::find($productId); // Mengambil produk berdasarkan ID
+            $product = Product::find($productId);
+    
             if ($product) {
-                $product->quantity = $quantity; // Menambahkan quantity ke produk
+                $product->quantity = $quantity;
                 $products[] = $product;
+    
+                // Validasi harga produk adalah angka
+                if (is_numeric($product->harga)) {
+                    $qty = (int) $quantity; // Tidak perlu akses array karena quantity adalah string
+                    $totalPrice += $product->harga * $qty;
+                }
             }
         }
     
-        // Pass data produk ke view
-        return view('cart.index', compact('products', 'cartItems'));
+        return view('cart.index', compact('products', 'totalPrice'));
     }
+    
+    
     
     
 
@@ -37,8 +47,8 @@ class CartController extends Controller
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
-
-        // Menyimpan produk ke database
+    
+        // Perbarui atau buat data di database
         $cart = Cart::updateOrCreate(
             [
                 'user_id' => auth()->id(),
@@ -48,30 +58,18 @@ class CartController extends Controller
                 'quantity' => \DB::raw('quantity + ' . $validated['quantity']),
             ]
         );
-
-        // Mendapatkan cart dari session
+    
+        // Perbarui data di session untuk sinkronisasi sementara
         $cartItems = Session::get('cartItems', []);
-        
-        // Update atau tambahkan item ke session
-        if (isset($cartItems[$validated['product_id']])) {
-            $cartItems[$validated['product_id']]['quantity'] += $validated['quantity'];
-        } else {
-            $cartItems[$validated['product_id']] = [
-                'product_id' => $validated['product_id'],
-                'quantity' => $validated['quantity'],
-            ];
-        }
-        
-        // Simpan cart kembali ke session
+        $cartItems[$validated['product_id']] = $validated['quantity'];
         Session::put('cartItems', $cartItems);
-
-        // Kembalikan respons
+    
         return response()->json([
             'message' => 'Product added to cart',
             'cart' => $cart,
-            'cartItems' => $cartItems, // Kirim data cart ke view
         ]);
     }
+    
 
 
     public function remove(Request $request)
@@ -98,6 +96,93 @@ class CartController extends Controller
     
         return redirect()->route('cart.index')->with('error', 'Item not found');
     }
+
+    public function update(Request $request)
+    {
+        $cartItem = Cart::where('product_id', $request->product_id)
+                        ->where('user_id', auth()->id()) // Validasi user
+                        ->first();
+    
+        if ($cartItem) {
+            $cartItem->quantity = $request->quantity;
+            $cartItem->save();
+        }
+    
+        return response()->json(['success' => true]);
+    }
+    
+
+
+
+
+    // PEMROSESAN ORDER
+    public function process(Request $request)
+    {
+        dd(env('MIDTRANS_SERVER_KEY'), env('MIDTRANS_CLIENT_KEY'));
+        $cartItems = Session::get('cartItems', []);
+        $totalPrice = 0;
+    
+        // Hitung total harga dari cart
+        foreach ($cartItems as $productId => $quantity) {
+            $product = Product::find($productId);
+            if ($product) {
+                $totalPrice += $product->harga * $quantity;
+            }
+        }
+    
+        if ($totalPrice == 0) {
+            return redirect()->route('cart.index')->with('error', 'Cart is empty!');
+        }
+    
+        // Buat transaksi di database
+        $transaction = Transaction::create([
+            'user_id' => Auth::user()->id,
+            'price' => $totalPrice,
+            'status' => 'pending',
+        ]);
+    
+        // Konfigurasi Midtrans
+        \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+        \Midtrans\Config::$isProduction = config('midtrans.isProduction');
+        \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
+        \Midtrans\Config::$is3ds = config('midtrans.is3ds');
+    
+        $params = [
+            'transaction_details' => [
+                'order_id' => $transaction->id,
+                'gross_amount' => $totalPrice,
+            ],
+            'customer_details' => [
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ],
+        ];
+    
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+    
+        $transaction->snap_token = $snapToken;
+        $transaction->save();
+    
+        return view('cart.checkout', compact('transaction', 'snapToken'));
+    }
+    
+
+    public function checkout(Transaction $transaction)
+    {
+        $products = config('products');
+        $product = collect($products)->firstWhere('id', $transaction->product_id);
+
+        return view('checkout', compact('transaction', 'product'));
+    }
+
+    public function success(Transaction $transaction)
+    {
+        $transaction->status = 'success';
+        $transaction->save();
+
+        return view('checkout.success', compact('transaction'));
+    }
+
     
 
 }

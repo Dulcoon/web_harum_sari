@@ -25,9 +25,6 @@
       </div>
     </div>
 
-
-
-
     <div class="mt-4" x-data="{ imageUrl: '{{ $product->foto ? asset('storage/' . $product->foto) : '/storage/no_image.png' }}' }">
       <form enctype="multipart/form-data" action="{{ route('products.update', $product->id) }}" method="POST" class="block lg:flex gap-3">
         @csrf
@@ -57,10 +54,10 @@
             <h3 class="text-slate-600">Featured Product</h3>
             <p class="font-bold text-xl">{{ $product->featured_products == '1' ? 'True' : 'False' }}</p>
           </div>
-        
-          
-
-          
+          <div class="mt-4">
+            <h3 class="text-slate-600">Stok</h3>
+            <p class="font-bold text-xl">{{ $product->stok}}</p>
+          </div>
         </div>
       </form>
     </div>

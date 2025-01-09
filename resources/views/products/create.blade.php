@@ -89,7 +89,11 @@
               value="{{ old('featured_products', '') }}">
             <x-input-error :messages="$errors->get('featured_products')" class="mt-2" />
           </div>
-
+          <div class="mt-4">
+            <x-input-label for="stok" :value="__('Stok')" />
+            <x-text-input id="stok" class="block mt-1 w-full" type="text" name="stok" :value="old('stok')" required/>
+            <x-input-error :messages="$errors->get('stok')" class="mt-2" />
+          </div>
 
           <x-primary-button class="w-full justify-center mt-3">
                   {{ __('Submit') }}

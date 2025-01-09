@@ -17,9 +17,10 @@ class ProductApiController extends Controller
                 'id' => $product->id,
                 'name' => $product->nama ?? 'No name',
                 'price' => $product->harga ?? 0,
-                'image_url' => 'https://c27f-103-92-232-19.ngrok-free.app/storage/'.$product->foto,
+                'image_url' =>$product->foto,
                 'description' => $product->deskripsi ?? 'No description available',
                 'category' => $product->kategori_id ?? 'Uncategorized',
+                'stok' => $product->stok,
             ];
         });
     
@@ -40,9 +41,10 @@ class ProductApiController extends Controller
                     'id' => $product->id,
                     'name' => $product->nama ?? 'No name',
                     'price' => $product->harga ?? 0,
-                    'image_url' => 'https://c27f-103-92-232-19.ngrok-free.app/storage/' . $product->foto,
+                    'image_url' => $product->foto,
                     'description' => $product->deskripsi ?? 'No description available',
                     'category' => $product->kategori->nama ?? 'Uncategorized',
+                    'stok' => $product->stok,
                 ],
             ]);
         }
