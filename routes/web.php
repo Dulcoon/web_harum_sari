@@ -18,7 +18,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TransactionApiController;
 use App\Http\Controllers\MidtransController;
 
-// cicd test
+// cicd test lagi
 Route::get('/test-cicd', function () {
     return 'CICD OK 🚀';
 });
