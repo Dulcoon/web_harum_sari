@@ -4,13 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Ambil code dari repo
+      # 1. Checkout repo
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
@@ -22,23 +23,26 @@ jobs:
           extensions: mbstring, bcmath, pdo, mysql
           tools: composer
 
-      # 3. Install dependency Laravel
+      # 3. Install dependency
       - name: 📦 Install dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      # 4. Prepare Laravel (optional)
+      # 4. Prepare Laravel
       - name: ⚙️ Prepare Laravel
         run: |
           cp .env.example .env || true
           php artisan key:generate || true
 
-      # 5. 🚀 Deploy CORE Laravel (tanpa public)
+      # 5. 🚀 Deploy CORE Laravel
       - name: 🚀 Deploy Laravel Core
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          security: strict
           server-dir: /laravel-crud/
           exclude: |
             **/public/**
@@ -46,13 +50,18 @@ jobs:
             **/node_modules/**
             **/tests/**
             **/.env
+            **/storage/**
+            **/bootstrap/cache/**
 
-      # 6. 🚀 Deploy PUBLIC ke public_html
+      # 6. 🚀 Deploy PUBLIC
       - name: 🚀 Deploy Public Folder
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          security: strict
           server-dir: /public_html/
-          local-dir: ./public/
+          local-dir: ./public
