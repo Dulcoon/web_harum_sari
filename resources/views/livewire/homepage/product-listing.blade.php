@@ -197,7 +197,7 @@
                             Sale</span>
                         <h2
                             class="text-4xl md:text-6xl font-black leading-[1.05] tracking-tight text-[#1b1c1b] dark:text-white">
-                            Get 20% discount on<br /><span class="premium-text-gradient">New Arrivalllllss</span></h2>
+                            Get 20% discount on<br /><span class="premium-text-gradient">New Arrival</span></h2>
                         <p class="text-[#6a5548] dark:text-white/60 text-base font-medium max-w-md">Elevate your living
                             space with our latest handcrafted Scandinavian furniture collection.</p>
                         <div class="flex flex-wrap gap-3 pt-1 justify-center md:justify-start">
