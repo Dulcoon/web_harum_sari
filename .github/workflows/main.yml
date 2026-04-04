@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -32,13 +33,17 @@ jobs:
           cp .env.example .env || true
           php artisan key:generate || true
 
-      # 5. 🚀 Deploy CORE Laravel (tanpa public)
+      # 🔥 5. Deploy CORE Laravel (FTPS FIX)
       - name: 🚀 Deploy Laravel Core
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          secure: true
+          passive: true
           server-dir: /laravel-crud/
           exclude: |
             **/public/**
@@ -46,13 +51,19 @@ jobs:
             **/node_modules/**
             **/tests/**
             **/.env
+            **/storage/**
+            **/bootstrap/cache/**
 
-      # 6. 🚀 Deploy PUBLIC ke public_html
+      # 🔥 6. Deploy PUBLIC (FTPS FIX)
       - name: 🚀 Deploy Public Folder
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          secure: true
+          passive: true
           server-dir: /public_html/
-          local-dir: ./public/
+          local-dir: ./public
