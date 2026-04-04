@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -18,8 +19,9 @@
   </style>
 </head>
 
-<body class="bg-grey-100">
+<body class="bg-grey-100 pb-24 md:pb-0">
   <x-navbar />
+  <x-bottom-navbar />
 
   <main>
     <div class="container mx-auto p-6">
@@ -99,30 +101,7 @@
       @endif
     </div>
 
-    <!-- Footer -->
-    <div class="footer bg-[#f1f3f2] mt-56">
-      <div class="container py-20 grid grid-cols-1 gap-44 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
-        <div class="text-center">
-          <h1 class="text-xl font-bold">PT. HARUM SARI</h1>
-          <p class="text-sm">WOODCRAFT HOMELIVING</p>
-        </div>
-        <div class="text-center">
-          <h1 class="text-xl font-bold">Categories</h1>
-          <div class="mt-5">
-            <a class="block" href="">Bedroom</a>
-            <a class="block" href="">Livingroom</a>
-            <a class="block" href="">Homewares</a>
-            <a class="block" href="">Kids Furniture</a>
-          </div>
-        </div>
-        <div class="text-center">
-          <h1 class="text-xl font-bold">PT. HARUM SARI</h1>
-          <p class="text-sm">WOODCRAFT HOMELIVING</p>
-        </div>
-      </div>
-      <p class="text-center pb-8">&copy; 2024 Copyright: homeliving.co.id</p>
-    </div>
-    <!-- Footer end -->
+    <x-footer />
   </main>
 
   <script>

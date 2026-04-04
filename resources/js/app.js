@@ -7,10 +7,13 @@ window.$ = window.jQuery = $;
 import Alpine from 'alpinejs';
 import mask from '@alpinejs/mask'
 
-window.Alpine = Alpine;
-
-Alpine.plugin(mask)
-Alpine.start();
+// Livewire v3 already ships with Alpine. Avoid booting a second Alpine instance,
+// because it can break Livewire `wire:*` reactivity on pages that use Livewire.
+if (!window.Livewire) {
+ window.Alpine = Alpine;
+ Alpine.plugin(mask)
+ Alpine.start();
+}
 
 
 jQuery(document).ready(function($) {
@@ -40,4 +43,3 @@ jQuery(document).ready(function($) {
 });
 
 });
-

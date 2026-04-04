@@ -2,139 +2,109 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Kategori;
-
-
-
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index(): View
     {
-        $kategoriId = $request->input('kategori_id'); 
-    
-        $kategories = Kategori::all();
-    
-        $products = Product::with('kategori')
-                    ->when($kategoriId, function ($query, $kategoriId) {
-                        $query->where('kategori_id', $kategoriId);
-                    })
-                    ->paginate(10);
-    
-        return view('products.index', compact('products', 'kategories', 'kategoriId'));
+        return view('products.index');
     }
 
-    public function create()
+    public function create(): RedirectResponse
     {
-        $kategories = Kategori::all();
-        return view('products.create', compact('kategories'));
+        return redirect()->route('products.index', ['create' => 1]);
     }
 
-    use \Illuminate\Foundation\Validation\ValidatesRequests;
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $this->validate($request, [
-            "nama" => "required",
-            "harga" => "required|numeric",
-            "deskripsi" => "required",
-            "kategori_id" => "required",
-            "featured_products" => "required|bool",
-            "foto" => "required|image|mimes:jpeg,png,jpg",
-            "stok" => "required|integer|min:0", // Validasi stok
+        $validated = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'harga' => ['required', 'numeric'],
+            'deskripsi' => ['required', 'string'],
+            'kategori_id' => ['required', 'exists:kategoris,id'],
+            'featured_products' => ['required', 'boolean'],
+            'foto' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:3072'],
+            'stok' => ['required', 'integer', 'min:0'],
         ]);
-    
-        $foto = $request->file("foto");
-        $fotoPath = $foto->storeAs('', $foto->hashName(), 'public');
-    
+
+        $fotoPath = $request->file('foto')->store('products', 'public');
+
         Product::create([
-            "nama" => $request->nama,
-            "harga" => $request->harga,
-            "deskripsi" => $request->deskripsi,
-            "kategori_id" => $request->kategori_id,
-            "featured_products" => $request->featured_products,
-            "foto" => $foto->hashName(),
-            "stok" => $request->stok, // Simpan stok
+            'nama' => $validated['nama'],
+            'harga' => $validated['harga'],
+            'deskripsi' => $validated['deskripsi'],
+            'kategori_id' => $validated['kategori_id'],
+            'featured_products' => (bool) $validated['featured_products'],
+            'foto' => $fotoPath,
+            'stok' => $validated['stok'],
         ]);
-    
-        return redirect()->route("products.index")->with("success", "Produk berhasil ditambahkan!");
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan!');
     }
-    
-    public function edit($id)
+
+    public function edit(Product $product): RedirectResponse
     {
-        $product = Product::findOrFail($id);
-    
-        $kategories = Kategori::all();
-    
-        return view('products.edit', compact('product', 'kategories'));
+        return redirect()->route('products.index', ['edit' => $product->id]);
     }
-    public function detail($id)
+
+    public function detail($id): View
     {
         $product = Product::with('kategori')->findOrFail($id);
-    
-    
+
         return view('products.detail', compact('product'));
     }
 
-
-    
-    
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): RedirectResponse
     {
-        // Validasi input, foto tidak wajib jika tidak diubah
-        $this->validate($request, [
-            "nama" => "required",
-            "harga" => "required|numeric",
-            "deskripsi" => "required",
-            "kategori_id" => "required",
-            "featured_products" => "required|bool",
-            "foto" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
-            "stok" => "required|integer|min:0",
+        $validated = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'harga' => ['required', 'numeric'],
+            'deskripsi' => ['required', 'string'],
+            'kategori_id' => ['required', 'exists:kategoris,id'],
+            'featured_products' => ['required', 'boolean'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:3072'],
+            'stok' => ['required', 'integer', 'min:0'],
         ]);
-    
-        // Update data produk
-        $product->nama = $request->nama;
-        $product->harga = $request->harga;
-        $product->deskripsi = $request->deskripsi;
-        $product->kategori_id = $request->kategori_id;
-        $product->featured_products = $request->featured_products;
-        $product->stok = $request->stok;
-    
-        if ($request->hasFile("foto")) {
-            if ($product->foto && $product->foto !== 'no_image.png') {
+
+        $product->nama = $validated['nama'];
+        $product->harga = $validated['harga'];
+        $product->deskripsi = $validated['deskripsi'];
+        $product->kategori_id = $validated['kategori_id'];
+        $product->featured_products = (bool) $validated['featured_products'];
+        $product->stok = $validated['stok'];
+
+        if ($request->hasFile('foto')) {
+            if ($product->foto && $product->foto !== 'no_image.png' && Storage::disk('public')->exists($product->foto)) {
                 Storage::disk('public')->delete($product->foto);
             }
-    
-            $foto = $request->file("foto");
-            $fotoPath = $foto->storeAs('products', $foto->hashName(), 'public');
-            $product->foto = $fotoPath; 
+
+            $product->foto = $request->file('foto')->store('products', 'public');
         }
-    
-        // Simpan perubahan
+
         $product->save();
-    
-        return redirect()->route("products.index")->with("success", "Produk berhasil diupdate!");
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diupdate!');
     }
-    
-    
-    public function destroy(Product $product)
+
+    public function destroy(Product $product): RedirectResponse
     {
-        if ($product->foto !== 'no_image.png') {
+        if ($product->foto && $product->foto !== 'no_image.png' && Storage::disk('public')->exists($product->foto)) {
             Storage::disk('public')->delete($product->foto);
-
         }
+
         $product->delete();
-        return redirect()->route("products.index")->with("success", "Produk berhasil dihapus!");
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus!');
     }
 
-    public function category($kategori_id)
+    public function category($kategori_id): RedirectResponse
     {
-    $products = Product::where('kategori_id', $kategori_id)->paginate(12);
-
-    return view('products.index', compact('products', 'kategori_id'));
+        return redirect()->route('products.index', ['kategori_id' => $kategori_id]);
     }
-
 
 }

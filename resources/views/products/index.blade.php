@@ -1,78 +1,131 @@
-<x-app-layout>
+<x-admin.layout
+    title="Product Management"
+    html-class="dark"
+    topbar-placeholder="Search products..."
+    :topbar-search-action="route('products.index')"
+    topbar-search-name="q"
+    :topbar-search-value="request('q', '')"
+    admin-role="Manager"
+    content-class="px-4 pb-20 pt-8 lg:px-10"
+>
+    <x-slot:head>
+        <style>
+            .glass-panel {
+                background: rgba(255, 255, 255, 0.45);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            }
 
- <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            .glass-table {
+                background: rgba(255, 255, 255, 0.56);
+                border: 1px solid rgba(255, 255, 255, 0.62);
+                box-shadow: 0 8px 28px rgba(31, 38, 135, 0.08);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
 
-  @if (session()->has('success'))
-  <x-alert message="{{ session('success') }}" />
-  @endif
+            html.dark .glass-panel,
+            html.dark .glass-table {
+                background: rgba(15, 17, 22, 0.7);
+                border-color: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+            }
 
-  <div class="flex justify-between px-3">
-   <form method="GET" action="{{ route('products.index') }}" class="mb-4">
-    <div class="mt-4">
-     <x-input-label for="kategori_id" :value="__('Kategori')" />
+            [x-cloak] {
+                display: none !important;
+            }
+        </style>
+    </x-slot:head>
 
-     <x-dropdown align="left" width="48" contentClasses="py-1 bg-white">
-      <x-slot name="trigger">
-       <button id="kategori_trigger" type="button" class="block w-full text-left border rounded-lg px-4 py-2 bg-white">
-        {{ old('kategori_id') ? $kategories->firstWhere('id', old('kategori_id'))->nama ?? 'Pilih Kategori...' : 'Pilih Kategori...' }}
-       </button>
-      </x-slot>
+    <livewire:admin.product-management />
 
-      <x-slot name="content">
-       @foreach($kategories as $kategori)
-       <div>
-        <button type="button" class="w-full text-left px-4 py-2 hover:bg-gray-100" @click="
-                            document.getElementById('hidden_kategori_id').value = '{{ $kategori->id }}'; 
-                            document.getElementById('kategori_trigger').innerText = '{{ $kategori->nama }}';
-                        ">
-         {{ $kategori->nama }}
-        </button>
-       </div>
-       @endforeach
-      </x-slot>
-     </x-dropdown>
+    <x-slot:scripts>
+        <script>
+            function productManager(config) {
+                return {
+                    products: config.products || [],
+                    baseProductUrl: config.baseProductUrl,
+                    defaultThumb: config.defaultThumb,
+                    createOpen: false,
+                    editOpen: false,
+                    deleteOpen: false,
+                    deleteTarget: null,
+                    createPreview: config.defaultThumb,
+                    editPreview: config.defaultThumb,
+                    editForm: {
+                        id: null,
+                        nama: '',
+                        harga: '',
+                        deskripsi: '',
+                        kategori_id: '',
+                        featured_products: '1',
+                        stok: 0,
+                    },
+                    init() {
+                        if (config.openCreateFromQuery || config.oldMode === 'create') {
+                            this.createOpen = true;
+                        }
 
-     <input type="hidden" id="hidden_kategori_id" name="kategori_id" value="{{ old('kategori_id', '') }}">
-     <x-input-error :messages="$errors->get('kategori_id')" class="mt-2" />
-    </div>
-
-    <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Filter</button>
-   </form>
-
-
-   <a href="{{route('products.create')}}">
-
-    <button class="flex px-3 py-3 bg-blue-500 font-semibold text-white"><svg class="mx-2"
-      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-     </svg>Tambah Produk</button>
-   </a>
-  </div>
-
-  <div class="grid md:grid-cols-3 grid-cols-1 gap-3 mt-6 px-3">
-   @foreach ($products as $product)
-   <div class="border-2 border-dashed border-blue-200">
-    <img src="{{ url('storage/' . $product->foto) }}" class="h-96 w-full object-cover" alt="">
-    <div class="text-center">
-     <p>{{ $product->nama }}</p>
-     <p>Rp. {{ number_format($product->harga) }}</p>
-    </div>
-
-    <div class="flex justify-center">
-     <a href="{{route('products.detail', $product)}}" class="w-full">
-      <button class="w-full px-3 py-3 bg-zinc-400 font-semibold ">Detail Product</button>
-     </a>
-    </div>
-   </div>
-   @endforeach
-  </div>
-
-  <div class="mt-4 px-3">
-   {{ $products->Links() }}
-  </div>
-
- </div>
-
-</x-app-layout>
+                        if (config.oldMode === 'edit' && config.oldEditProductId) {
+                            const product = this.products.find((item) => item.id === Number(config.oldEditProductId));
+                            if (product) {
+                                this.openEdit(product);
+                                this.applyOldFieldsToEdit();
+                            }
+                        } else if (config.openEditIdFromQuery) {
+                            const product = this.products.find((item) => item.id === Number(config.openEditIdFromQuery));
+                            if (product) {
+                                this.openEdit(product);
+                            }
+                        }
+                    },
+                    openEdit(product) {
+                        this.editForm = {
+                            id: product.id,
+                            nama: product.nama ?? '',
+                            harga: product.harga ?? '',
+                            deskripsi: product.deskripsi ?? '',
+                            kategori_id: String(product.kategori_id ?? ''),
+                            featured_products: String(product.featured_products ?? 1),
+                            stok: product.stok ?? 0,
+                        };
+                        this.editPreview = product.foto || this.defaultThumb;
+                        this.editOpen = true;
+                    },
+                    openDelete(product) {
+                        this.deleteTarget = { ...product };
+                        this.deleteOpen = true;
+                    },
+                    applyOldFieldsToEdit() {
+                        const oldFields = config.oldFields || {};
+                        this.editForm.nama = oldFields.nama ?? this.editForm.nama;
+                        this.editForm.harga = oldFields.harga ?? this.editForm.harga;
+                        this.editForm.deskripsi = oldFields.deskripsi ?? this.editForm.deskripsi;
+                        this.editForm.kategori_id = oldFields.kategori_id ? String(oldFields.kategori_id) : this.editForm.kategori_id;
+                        this.editForm.featured_products = oldFields.featured_products !== null && oldFields.featured_products !== undefined
+                            ? String(oldFields.featured_products)
+                            : this.editForm.featured_products;
+                        this.editForm.stok = oldFields.stok ?? this.editForm.stok;
+                    },
+                    updateCreatePreview(event) {
+                        const [file] = event.target.files || [];
+                        if (!file) {
+                            this.createPreview = this.defaultThumb;
+                            return;
+                        }
+                        this.createPreview = URL.createObjectURL(file);
+                    },
+                    updateEditPreview(event) {
+                        const [file] = event.target.files || [];
+                        if (!file) {
+                            return;
+                        }
+                        this.editPreview = URL.createObjectURL(file);
+                    },
+                };
+            }
+        </script>
+    </x-slot:scripts>
+</x-admin.layout>

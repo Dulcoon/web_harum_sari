@@ -11,25 +11,37 @@ class HomeController extends Controller
 {
     public function showHomePage()
     {
-        // Mengambil produk untuk ditampilkan di halaman utama
-        $products = Product::paginate(12); 
+        // Mengambil semua kategori beserta jumlah produk di setiap kategori
+        $kategories = Kategori::withCount('products')->get();
 
-        return view('homepage.home', compact('products'));
+        // Mengambil produk untuk ditampilkan di halaman utama
+        $products = Product::paginate(12);
+
+        // Mengambil produk yang memiliki atribut featured_products bernilai true
+        $featuredProducts = Product::where('featured_products', true)->get();
+
+        return view('homepage.home', compact('products', 'kategories', 'featuredProducts'));
     }
 
     public function product(Request $request)
     {
-    
-        $kategoriId = $request->input('kategori_id'); 
+        return view('homepage.product');
+    }
 
-        $kategories = Kategori::all();
+    public function showProductDetail($id)
+    {
+        $product = Product::findOrFail($id); // Mengambil produk berdasarkan ID
+        return view('homepage.product-detail', compact('product'));
+    }
 
-        $products = Product::with('kategori')
-                    ->when($kategoriId, function ($query, $kategoriId) {
-                        $query->where('kategori_id', $kategoriId);
-                    })->paginate(10);
+    public function searchSuggestions(Request $request)
+    {
+        $query = $request->get('query');
+        
+        $products = Product::where('nama', 'like', "%{$query}%")
+            ->limit(5)
+            ->get(['id', 'nama', 'harga', 'foto']);
 
-
-        return view('homepage.product', compact('products', 'kategories', 'kategoriId'));
+        return response()->json($products);
     }
 }

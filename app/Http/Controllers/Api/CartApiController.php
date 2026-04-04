@@ -59,7 +59,8 @@ class CartApiController extends Controller
             ->get();
     
         $cartItemsWithDetails = $cartItems->map(function($cartItem) {
-            $product = $cartItem->product; 
+            $product = $cartItem->product;
+            return [
                 'id' => $cartItem->id,
                 'user_id' => $cartItem->user_id,
                 'product_id' => $cartItem->product_id,

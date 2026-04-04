@@ -26,6 +26,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class); // Satu order bisa memiliki banyak order item
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     /**
      * Relasi ke tabel `transactions`
      */

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Kategori;
+use Illuminate\Validation\Rule;
 
 
 
@@ -14,84 +15,72 @@ class CategoryController extends Controller
 {
     public function index(Request $request)
     {
-    
-        $categories = Kategori::all();
-    
-    
-        return view('kategori.kategori', compact( 'categories',));
+        $search = (string) $request->query('q', '');
+
+        $categories = Kategori::query()
+            ->withCount('products')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('nama', 'like', '%' . $search . '%');
+            })
+            ->latest()
+            ->paginate(8)
+            ->withQueryString();
+
+        return view('kategori.kategori', compact('categories', 'search'));
     }
 
     public function create()
     {
-        // $kategories = Kategori::all();
-        return view('kategori.createKategori');
+        return redirect()->route('category.index');
     }
 
     use \Illuminate\Foundation\Validation\ValidatesRequests;
     public function store(Request $request)
     {
         $this->validate($request, [
-            "nama" => "required",
-            "thumbnail" => "required|image|mimes:jpeg,png,jpg",
+            'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')],
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:3072',
         ]);
-    
-        $thumbnail = $request->file("thumbnail");
-    
-        $fotoPath = $thumbnail->storeAs('', $thumbnail->hashName(), 'public');
+
+        $thumbnailPath = $request->file('thumbnail')->store('categories', 'public');
 
         Kategori::create([
-            "nama" => $request->nama,
-            "thumbnail" => $thumbnail->hashName(),
+            'nama' => $request->nama,
+            'thumbnail' => $thumbnailPath,
         ]);
-    
-        return redirect()->route("category.index")->with("success", "Produk berhasil ditambahkan!");
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
     
 
-    public function update(Request $request, $id)
-{
-    // Validasi input
-    $this->validate($request, [
-        "nama" => "required|string|max:255",
-        "thumbnail" => "nullable|image|mimes:jpeg,png,jpg|max:2048",
-    ]);
+    public function update(Request $request, Kategori $category)
+    {
+        $this->validate($request, [
+            'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')->ignore($category->id)],
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+        ]);
 
-    // Temukan kategori berdasarkan ID
-    $category = Kategori::findOrFail($id);
-
-    // Update nama kategori hanya jika ada perubahan
-    if ($request->nama !== $category->nama) {
         $category->nama = $request->nama;
-    }
 
-    // Periksa apakah ada file thumbnail yang diunggah
-    if ($request->hasFile('thumbnail')) {
-        // Hapus thumbnail lama jika ada dan bukan default 'no_image.png'
-        if ($category->thumbnail && $category->thumbnail !== 'no_image.png') {
-            Storage::disk('public')->delete($category->thumbnail);
+        if ($request->hasFile('thumbnail')) {
+            if ($category->thumbnail && $category->thumbnail !== 'no_image.png' && Storage::disk('public')->exists($category->thumbnail)) {
+                Storage::disk('public')->delete($category->thumbnail);
+            }
+
+            $category->thumbnail = $request->file('thumbnail')->store('categories', 'public');
         }
 
-        // Simpan thumbnail baru
-        $thumbnail = $request->file('thumbnail');
-        $thumbnailPath = $thumbnail->storeAs('categories', $thumbnail->hashName(), 'public');
-        $category->thumbnail = $thumbnailPath;
+        $category->save();
+
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui!');
     }
-
-    // Simpan perubahan
-    $category->save();
-
-    // Kembalikan ke halaman daftar kategori dengan pesan sukses
-    return redirect()->route('category.index')->with('success', 'Kategori berhasil diperbarui!');
-}
 
 
 
 
     public function edit($id)
     {
-        $categories = Kategori::findOrFail($id);
-    
-        return view('kategori.editKategori', compact('categories'));
+        return redirect()->route('category.index');
     }
     
     public function detail($id)
@@ -102,24 +91,21 @@ class CategoryController extends Controller
     }
     
     
-    public function destroy(kategori $categories)
+    public function destroy(Kategori $category)
     {
-        $categories->products()->delete(); // Jika relasi ada di model kategori
-    
-        if (!empty($categories->thumbnail) && $categories->thumbnail !== 'no_image.png') {
-            Storage::disk('public')->delete($categories->thumbnail);
+        $category->products()->delete();
+
+        if (!empty($category->thumbnail) && $category->thumbnail !== 'no_image.png' && Storage::disk('public')->exists($category->thumbnail)) {
+            Storage::disk('public')->delete($category->thumbnail);
         }
-    
-        // Hapus kategori
+
         try {
-            $categories->delete();
+            $category->delete();
         } catch (\Exception $e) {
             \Log::error($e->getMessage());
         }
 
-        return redirect()->route("category.index")->with("success", "kategori berhasil dihapus!");
-
-        // Redirect dengan pesan sukses
+        return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus!');
     }
     
 

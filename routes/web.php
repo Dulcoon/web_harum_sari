@@ -4,9 +4,11 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\sendEmailController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Controllers\Api\AuthController;
@@ -26,9 +28,9 @@ Route::post('/send-email', [sendEmailController::class, 'send_email'])->name('em
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('products/create',[ProductController::class,'create'])->name('products.create');
@@ -37,6 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::get('products/{product}/edit', [ProductController::class,'edit'])->name('products.edit');
     Route::put('products/{product}', [ProductController::class,'update'])->name('products.update');
     Route::delete('products/{product}',[ProductController::class,'destroy'])->name('products.destroy');
+
+    Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
+    Route::post('users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
+    Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.update');
+    Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
     
     
     Route::get('category',[CategoryController::class,'index'])->name('category.index');
@@ -83,13 +92,14 @@ Route::middleware('auth')->group(function () {
 
 // middleware untuk customer
 Route::middleware([EnsureUserIsCustomer::class])->group(function () {
-    Route::get('/product', [HomeController::class, 'product'])->name(name: 'homepage.product');
 });
+Route::get('/product', [HomeController::class, 'product'])->name(name: 'homepage.product');
 
-
+Route::get('/products-cust', [HomeController::class, 'product'])->name('productss');
 Route::get('/', [HomeController::class, 'showHomePage'])->name('homepage.home');
 
-
+Route::get('/product/{id}', [HomeController::class, 'showProductDetail'])->name('product.detail');
+Route::get('/products/search-suggestions', [HomeController::class, 'searchSuggestions'])->name('products.search.suggestions');
 
 
 
