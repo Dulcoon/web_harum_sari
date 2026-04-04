@@ -19,7 +19,9 @@ use App\Http\Controllers\TransactionApiController;
 use App\Http\Controllers\MidtransController;
 
 
-
+Route::get('/test-cicd', function () {
+    return 'CICD OK 🚀';
+});
 
 
 Route::get('/contact-us', [sendEmailController::class, 'showForm'])->name('email.form');
@@ -33,12 +35,12 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('products/create',[ProductController::class,'create'])->name('products.create');
-    Route::get('products',[ProductController::class,'index'])->name('products.index');
-    Route::post('products',[ProductController::class,'store'])->name('products.store');
-    Route::get('products/{product}/edit', [ProductController::class,'edit'])->name('products.edit');
-    Route::put('products/{product}', [ProductController::class,'update'])->name('products.update');
-    Route::delete('products/{product}',[ProductController::class,'destroy'])->name('products.destroy');
+    Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::get('products', [ProductController::class, 'index'])->name('products.index');
+    Route::post('products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
     Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
     Route::get('users/create', [UserManagementController::class, 'create'])->name('users.create');
@@ -46,39 +48,39 @@ Route::middleware('auth')->group(function () {
     Route::get('users/{user}/edit', [UserManagementController::class, 'edit'])->name('users.edit');
     Route::put('users/{user}', [UserManagementController::class, 'update'])->name('users.update');
     Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
-    
-    
-    Route::get('category',[CategoryController::class,'index'])->name('category.index');
-    Route::get('category/create',[CategoryController::class,'create'])->name('category.create');
-    Route::post('category',[CategoryController::class,'store'])->name('category.store');
-    Route::get('category/{category}/edit', [CategoryController::class,'edit'])->name('category.edit');
-    Route::put('category/{category}', [CategoryController::class,'update'])->name('category.update');
-    Route::delete('category/{category}',[CategoryController::class,'destroy'])->name('category.destroy');
-    
+
+
+    Route::get('category', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('category/create', [CategoryController::class, 'create'])->name('category.create');
+    Route::post('category', [CategoryController::class, 'store'])->name('category.store');
+    Route::get('category/{category}/edit', [CategoryController::class, 'edit'])->name('category.edit');
+    Route::put('category/{category}', [CategoryController::class, 'update'])->name('category.update');
+    Route::delete('category/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+
 
     // ini utk detail 
-    Route::get('products/{product}/detail', [ProductController::class,'detail'])->name('products.detail');
+    Route::get('products/{product}/detail', [ProductController::class, 'detail'])->name('products.detail');
 
 
-    
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
 
-    
-    
-    
-    
+
+
+
+
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout/createMidtransToken', [CheckoutController::class, 'createMidtransToken'])->name('checkout.createMidtransToken');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
     Route::get('/checkout/pending', [CheckoutController::class, 'pending'])->name('checkout.pending');
-    
-    
+
+
     Route::post('/checkout/createSnapToken', [CheckoutController::class, 'createSnapToken'])->name('checkout.createSnapToken');
-    
+
 
 
     Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -86,7 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
-    
+
 });
 
 
@@ -110,7 +112,7 @@ Route::prefix('api')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });
-    
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/customers', [UserController::class, 'index']);
         Route::post('/customers', [UserController::class, 'store']);
@@ -149,8 +151,8 @@ Route::get('/api/transactions/{userId}', [MidtransController::class, 'getTransac
 
 
 Route::middleware('auth:sanctum')->group(function () {
-   
+
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
