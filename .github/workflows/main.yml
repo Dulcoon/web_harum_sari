@@ -39,7 +39,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /laravel-crud
+          server-dir: /laravel-crud/
           exclude: |
             **/public/**
             **/.git*
@@ -54,5 +54,5 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /public_html
-          local-dir: ./public
+          server-dir: /public_html/
+          local-dir: ./public/
