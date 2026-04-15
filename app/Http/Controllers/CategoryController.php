@@ -125,5 +125,4 @@ class CategoryController extends Controller
         return view('products.index', compact('products', 'kategori_id'));
     }
 
-
 }
