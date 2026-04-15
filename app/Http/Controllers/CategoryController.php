@@ -56,10 +56,12 @@ class CategoryController extends Controller
     }
 
 
-    public function update(Request $request, Kategori $category)
+    public function update(Request $request, $id)
     {
+        $category = Kategori::findOrFail($id);
+
         $this->validate($request, [
-            'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')->ignore($category->id)],
+            'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')->ignore($id)],
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
         ], [
             'nama.unique' => 'Nama kategori sudah digunakan.',
@@ -97,8 +99,9 @@ class CategoryController extends Controller
     }
 
 
-    public function destroy(Kategori $category)
+    public function destroy($id)
     {
+        $category = Kategori::findOrFail($id);
         $category->products()->delete();
 
         if (!empty($category->thumbnail) && $category->thumbnail !== 'no_image.png' && Storage::disk('public')->exists($category->thumbnail)) {
