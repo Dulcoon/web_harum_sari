@@ -39,7 +39,10 @@ class CategoryController extends Controller
     {
         $this->validate($request, [
             'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')],
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:3072',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:10240',
+        ], [
+            'nama.unique' => 'Nama kategori sudah digunakan.',
+            'thumbnail.max' => 'Ukuran thumbnail tidak boleh lebih dari 10MB.',
         ]);
 
         $thumbnailPath = $request->file('thumbnail')->store('categories', 'public');
@@ -51,13 +54,16 @@ class CategoryController extends Controller
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
-    
+
 
     public function update(Request $request, Kategori $category)
     {
         $this->validate($request, [
             'nama' => ['required', 'string', 'max:255', Rule::unique('kategoris', 'nama')->ignore($category->id)],
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+        ], [
+            'nama.unique' => 'Nama kategori sudah digunakan.',
+            'thumbnail.max' => 'Ukuran thumbnail tidak boleh lebih dari 10MB.',
         ]);
 
         $category->nama = $request->nama;
@@ -82,15 +88,15 @@ class CategoryController extends Controller
     {
         return redirect()->route('category.index');
     }
-    
+
     public function detail($id)
     {
         $product = Product::with('kategori')->findOrFail($id);
-    
+
         return view('products.detail', compact('product'));
     }
-    
-    
+
+
     public function destroy(Kategori $category)
     {
         $category->products()->delete();
@@ -107,13 +113,13 @@ class CategoryController extends Controller
 
         return redirect()->route('category.index')->with('success', 'Kategori berhasil dihapus!');
     }
-    
+
 
     public function category($kategori_id)
     {
-    $products = Product::where('kategori_id', $kategori_id)->paginate(12);
+        $products = Product::where('kategori_id', $kategori_id)->paginate(12);
 
-    return view('products.index', compact('products', 'kategori_id'));
+        return view('products.index', compact('products', 'kategori_id'));
     }
 
 
