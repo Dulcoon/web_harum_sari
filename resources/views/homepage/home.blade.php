@@ -12,7 +12,7 @@
         <div class="relative z-10 max-w-2xl p-6 md:p-8 lg:p-10 rounded-[2rem] glass-morphism shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
             <div class="space-y-6">
                 <span class="inline-flex px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/25">Crafted Living</span>
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.03] tracking-tight text-[#1b1c1b] dark:text-white">Modern Furniture for<br/><span class="premium-text-gradient">Modern Living....</span></h1>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.03] tracking-tight text-[#1b1c1b] dark:text-white">Modern Furniture for<br/><span class="premium-text-gradient">Modern Living</span></h1>
                 <p class="text-base md:text-lg text-[#5f4b3f] dark:text-white/75 max-w-xl">Curated Scandinavian pieces designed for comfort, longevity, and timeless aesthetic appeal.</p>
                 <div class="flex flex-wrap gap-3">
                     <a href="{{ route('homepage.product') }}" class="bg-premium-gradient text-white px-8 py-3.5 rounded-2xl font-black text-sm shadow-xl hover:scale-105 transition-all">Shop Collection</a>
