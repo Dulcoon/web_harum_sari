@@ -46,7 +46,7 @@
                 </div>
 
                 {{-- Remove from wishlist --}}
-                <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="shrink-0">
+                <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="shrink-0">
                     @csrf
                     <button type="submit"
                         class="flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all"

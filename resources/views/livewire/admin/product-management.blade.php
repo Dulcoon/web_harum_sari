@@ -183,11 +183,11 @@
                             @endif
                         </div>
                         <div class="mt-4 flex gap-3">
-                            <button type="button" @click="openEdit({ id: {{ $product->id }}, nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#eadfd4] bg-white/70 px-4 py-2.5 text-xs font-bold text-[#4e4139] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/80">
+                            <button type="button" @click="openEdit({ id: {{ $product->id }}, slug: '{{ $product->slug }}', nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#eadfd4] bg-white/70 px-4 py-2.5 text-xs font-bold text-[#4e4139] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/80">
                                 <span class="material-symbols-outlined text-[16px]">edit</span>
                                 Edit
                             </button>
-                            <button type="button" @click="openDelete({ id: {{ $product->id }}, nama: @js($product->nama) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50/80 px-4 py-2.5 text-xs font-bold text-red-600 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
+                            <button type="button" @click="openDelete({ id: {{ $product->id }}, slug: '{{ $product->slug }}', nama: @js($product->nama) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50/80 px-4 py-2.5 text-xs font-bold text-red-600 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
                                 <span class="material-symbols-outlined text-[16px]">delete</span>
                                 Delete
                             </button>
@@ -256,10 +256,10 @@
                             </td>
                             <td class="py-5">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button type="button" @click="openEdit({ id: {{ $product->id }}, nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                                    <button type="button" @click="openEdit({ id: {{ $product->id }}, slug: '{{ $product->slug }}', nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70">
                                         <span class="material-symbols-outlined text-[17px]">edit</span>
                                     </button>
-                                    <button type="button" @click="openDelete({ id: {{ $product->id }}, nama: @js($product->nama) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                                    <button type="button" @click="openDelete({ id: {{ $product->id }}, slug: '{{ $product->slug }}', nama: @js($product->nama) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
                                         <span class="material-symbols-outlined text-[17px]">delete</span>
                                     </button>
                                 </div>
@@ -384,7 +384,7 @@
                 </button>
             </div>
 
-            <form method="POST" enctype="multipart/form-data" :action="`${baseProductUrl}/${editForm.id}`" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <form method="POST" enctype="multipart/form-data" :action="`${baseProductUrl}/${editForm.slug}`" class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="form_mode" value="edit">
@@ -453,7 +453,7 @@
                 Are you sure you want to delete <span class="font-semibold text-[#1b1c1b] dark:text-white" x-text="deleteTarget?.nama"></span>?
             </p>
 
-            <form method="POST" :action="deleteTarget ? `${baseProductUrl}/${deleteTarget.id}` : '#'" class="mt-6 flex items-center justify-end gap-3">
+            <form method="POST" :action="deleteTarget ? `${baseProductUrl}/${deleteTarget.slug}` : '#'" class="mt-6 flex items-center justify-end gap-3">
                 @csrf
                 @method('DELETE')
                 <button type="button" @click="deleteOpen = false" class="rounded-xl border border-[#eadfd4] bg-white/70 px-4 py-2.5 text-sm font-semibold dark:border-white/10 dark:bg-white/5">Cancel</button>

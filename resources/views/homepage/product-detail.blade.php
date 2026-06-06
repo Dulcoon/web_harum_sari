@@ -64,7 +64,7 @@
                     In Stock
                 </span>
 
-                <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="absolute top-6 right-6">
+                <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="absolute top-6 right-6">
                     @csrf
                     <button type="submit"
                         class="w-10 h-10 glass-morphism !bg-black/40 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/70 hover:text-primary' }}">

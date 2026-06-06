@@ -24,6 +24,7 @@
                     editPreview: config.defaultThumb,
                     editForm: {
                         id: null,
+                        slug: '',
                         nama: '',
                         harga: '',
                         deskripsi: '',
@@ -52,6 +53,7 @@
                     openEdit(product) {
                         this.editForm = {
                             id: product.id,
+                            slug: product.slug,
                             nama: product.nama ?? '',
                             harga: product.harga ?? '',
                             deskripsi: product.deskripsi ?? '',

@@ -24,11 +24,11 @@ class SitemapController extends Controller
         }
 
         // Product detail pages
-        $products = Product::select('id', 'nama', 'updated_at')->get();
+        $products = Product::select('id', 'slug', 'nama', 'updated_at')->get();
 
         foreach ($products as $product) {
             $urls[] = [
-                'loc' => route('product.detail', $product->id),
+                'loc' => route('product.detail', $product),
                 'priority' => '0.8',
                 'changefreq' => 'weekly',
                 'lastmod' => $product->updated_at->toW3cString(),
