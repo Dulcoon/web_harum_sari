@@ -219,7 +219,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="glass-morphism rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4">
                         <div
                             class="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-xl flex items-center justify-center text-[#6a5548] dark:text-white/50">
@@ -299,7 +299,7 @@
                 <div wire:loading.flex class="items-center justify-center py-12 text-sm font-semibold text-primary">
                     Loading products...</div>
 
-                <div wire:loading.remove class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
+                <div wire:loading.remove class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
                     @forelse ($products as $product)
                         @php
                             $isFavorited = in_array($product->id, $favoriteProductIds);

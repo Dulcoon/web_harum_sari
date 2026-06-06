@@ -38,11 +38,66 @@
             </button>
 
             @auth
-                <a href="{{ route('profile.edit') }}" class="hidden xl:inline-flex p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Profile">
-                    <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">person</span>
-                </a>
+                <div class="relative hidden xl:inline-flex"
+                    x-data="{ profileOpen: false }">
+                    <button
+                        type="button"
+                        @click="profileOpen = !profileOpen"
+                        @keydown.escape.window="profileOpen = false"
+                        class="flex items-center gap-2 p-1 pr-3 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+                        aria-label="Profile menu"
+                    >
+                        <img
+                            src="{{ Auth::user()->generateAvatarUrl() }}"
+                            alt="{{ Auth::user()->name }}"
+                            class="w-8 h-8 rounded-full object-cover border border-white/60"
+                        >
+                        <span class="text-xs font-semibold text-[#2a2019] dark:text-white/80 truncate max-w-[80px]">{{ Auth::user()->name }}</span>
+                    </button>
+
+                    <div
+                        x-show="profileOpen"
+                        x-cloak
+                        @click.outside="profileOpen = false"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-95 translate-y-1"
+                        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 scale-95 translate-y-1"
+                        class="absolute right-0 top-full mt-3 w-56 origin-top-right"
+                    >
+                        <div class="rounded-2xl border border-black/10 dark:border-white/10 bg-white/90 dark:bg-[#1b1c1b] p-2 shadow-xl backdrop-blur-xl">
+                            <div class="border-b border-black/10 dark:border-white/10 px-3 py-2.5">
+                                <p class="text-sm font-bold truncate">{{ Auth::user()->name }}</p>
+                                <p class="text-[11px] text-[#6a5548] dark:text-white/50 truncate">{{ Auth::user()->email }}</p>
+                            </div>
+
+                            <a href="{{ route('profile.edit') }}" @click="profileOpen = false"
+                                class="mt-1 flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#2a2019] dark:text-white/80 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+                                <span class="material-symbols-outlined text-[18px]">person</span>
+                                My Profile
+                            </a>
+
+                            <a href="{{ route('wishlist.index') }}" @click="profileOpen = false"
+                                class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#2a2019] dark:text-white/80 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+                                <span class="material-symbols-outlined text-[18px]">favorite</span>
+                                Wishlist
+                            </a>
+
+                            <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-black/10 dark:border-white/10 pt-1">
+                                @csrf
+                                <button type="submit" @click="profileOpen = false"
+                                    class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10">
+                                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @else
-                <a href="{{ route('login') }}" class="hidden xl:inline-flex p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Login">
+                <a href="{{ route('login') }}" class="hidden xl:inline-flex items-center gap-1.5 p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Login">
                     <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">login</span>
                 </a>
             @endauth
