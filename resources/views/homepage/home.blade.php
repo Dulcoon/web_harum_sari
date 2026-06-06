@@ -15,7 +15,7 @@
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10 space-y-10">
     <section class="relative overflow-hidden rounded-[2.5rem] min-h-[520px] lg:min-h-[620px] flex items-center p-6 md:p-8 lg:p-12 border border-black/10 dark:border-white/10">
         <div class="absolute inset-0">
-            <div class="absolute inset-0 bg-cover bg-center scale-105" style='background-image: url("{{ asset('assets/hero.png') }}");'></div>
+            <div class="absolute inset-0 bg-cover bg-center scale-105" style='background-image: url("{{ asset('assets/hero.webp') }}");'></div>
         </div>
 
         <div class="relative z-10 max-w-2xl p-6 md:p-8 lg:p-10 rounded-[2rem] glass-morphism shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
@@ -95,7 +95,7 @@
                 <article onclick="window.location='{{ route('product.detail', $product) }}'"
                     class="product-glass-card rounded-3xl p-4 group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                     <div class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
-                        <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}" alt="{{ $product->nama }}"
+                        <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.webp') }}" alt="{{ $product->nama }}"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy"/>
 
                         <span class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">Sale</span>
@@ -135,7 +135,7 @@
             ] as $item)
                 <article class="glass-morphism rounded-2xl p-7 md:p-8 text-center">
                     <div class="w-16 h-16 mx-auto rounded-full border-4 border-white/90 dark:border-[#2a1d14] overflow-hidden shadow-sm mb-5">
-                        <img src="{{ asset('assets/profile.png') }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('assets/profile.webp') }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex justify-center gap-1 mb-4 text-primary">
                         <span class="material-symbols-outlined text-sm">star</span>

@@ -202,7 +202,7 @@ class DashboardController extends Controller
         $totalTopQty = max(1, (int) collect($topCategories)->sum('qty'));
         $topCategories = collect($topCategories)->map(function ($item) use ($totalTopQty) {
             $name = (string) ($item->nama ?? 'Category');
-            $thumbnail = $item->thumbnail ? asset('storage/'.$item->thumbnail) : asset('assets/no_image.png');
+            $thumbnail = $item->thumbnail ? asset('storage/'.$item->thumbnail) : asset('assets/no_image.webp');
             $qty = (int) ($item->qty ?? 0);
             $share = (int) round(($qty / $totalTopQty) * 100);
 

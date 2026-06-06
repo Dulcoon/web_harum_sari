@@ -5,7 +5,7 @@
       <h2 class="font-semibold text-2xl">Add Products</h2>
     </div>
 
-    <div class="mt-4" x-data="{ imageUrl: '/storage/no_image.png' }">
+    <div class="mt-4" x-data="{ imageUrl: '{{ asset('assets/no_image.webp') }}' }">
       <form enctype="multipart/form-data" action="{{ route('products.store') }}" method="POST" class="flex gap-3">
         @csrf
         <div class="w-1/2">

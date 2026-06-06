@@ -1,5 +1,5 @@
 @php
-    $defaultThumb = asset('assets/no_image.png');
+    $defaultThumb = asset('assets/no_image.webp');
     $categoryPayload = $categories->map(function ($category) use ($defaultThumb) {
         return [
             'id' => $category->id,

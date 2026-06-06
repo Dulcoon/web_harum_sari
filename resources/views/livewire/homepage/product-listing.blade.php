@@ -81,7 +81,7 @@
                     <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 mb-4">Featured Selection
                     </p>
                     <div class="relative aspect-[4/5] rounded-xl overflow-hidden mb-5 group">
-                        <img src="{{ asset('assets/hero.png') }}" alt="Featured collection"
+                        <img src="{{ asset('assets/hero.webp') }}" alt="Featured collection" loading="lazy"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 brightness-90" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
@@ -193,7 +193,7 @@
 
                     {{-- Full-height image on the right --}}
                     <div class="absolute inset-y-0 right-0 w-1/2 md:w-3/5 overflow-hidden rounded-r-[2.5rem]">
-                        <img src="{{ asset('assets/Gemini_Generated_Image_meakqgmeakqgmeak.png') }}" alt="Hero Sofa"
+                        <img src="{{ asset('assets/gemini-banner.webp') }}" alt="Hero Sofa" loading="lazy"
                             class="h-full w-full object-cover drop-shadow-[0_35px_35px_rgba(212,98,17,0.35)] hover:rotate-2 transition-transform duration-700" />
                         <div class="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-[#f9f4ed] dark:from-[#221810] to-transparent pointer-events-none"></div>
                     </div>
@@ -309,7 +309,7 @@
                             class="product-glass-card rounded-3xl p-4 shadow-sm group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                             <div
                                 class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
-                                <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}"
+                                <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.webp') }}"
                                     alt="{{ $product->nama }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
 

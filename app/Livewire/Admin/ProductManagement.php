@@ -66,7 +66,7 @@ class ProductManagement extends Component
             ->paginate(10)
             ->onEachSide(1);
 
-        $defaultThumb = asset('assets/no_image.png');
+        $defaultThumb = asset('assets/no_image.webp');
         $stockMax = max(1, (int) $products->getCollection()->max('stok'));
         $productPayload = $products->getCollection()->map(function (Product $product) use ($defaultThumb) {
             return [

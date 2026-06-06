@@ -170,7 +170,7 @@
 
                     data.forEach(product => {
                         const detailRoute = "{{ route('product.detail', ':slug') }}".replace(':slug', product.slug);
-                        const imageSrc = product.foto ? `/storage/${product.foto}` : "{{ asset('assets/no_image.png') }}";
+                        const imageSrc = product.foto ? `/storage/${product.foto}` : "{{ asset('assets/no_image.webp') }}";
 
                         const li = document.createElement('li');
                         li.innerHTML = `

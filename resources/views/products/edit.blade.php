@@ -14,7 +14,7 @@
 
 
 
-    <div class="mt-4" x-data="{ imageUrl: '{{ $product->foto ? asset('storage/' . $product->foto) : '/storage/no_image.png' }}' }">
+    <div class="mt-4" x-data="{ imageUrl: '{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.webp') }}' }">
       <form enctype="multipart/form-data" action="{{ route('products.update', $product) }}" method="POST" class="flex gap-3">
         @csrf
         @method('PUT')

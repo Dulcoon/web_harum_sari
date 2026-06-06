@@ -33,7 +33,7 @@
 
                 {{-- Image --}}
                 <div class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-xl overflow-hidden bg-white/10">
-                    <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}"
+                    <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.webp') }}"
                          alt="{{ $product->nama }}"
                          class="w-full h-full object-cover" loading="lazy">
                 </div>
