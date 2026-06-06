@@ -26,7 +26,7 @@ class AuthenticatedSessionController extends Controller
     {
         $user = \App\Models\User::where('email', $request->email)->first();
 
-        if ($user && is_null($user->email_verified_at)) {
+        if ($user && is_null($user->email_verified_at) && $user->role !== 'admin') {
             return redirect()->route('verify-otp', ['email' => $user->email])
                 ->with('error', 'Please verify your email before logging in.');
         }

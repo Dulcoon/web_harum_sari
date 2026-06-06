@@ -35,6 +35,13 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        if ($user->role === 'admin') {
+            $user->markEmailAsVerified();
+
+            return redirect()->route('login')
+                ->with('success', 'Admin account created. You can now login.');
+        }
+
         $otp = UserOtp::create([
             'user_id' => $user->id,
             'otp' => str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT),
