@@ -2,6 +2,15 @@
 
 @section('title', 'My Wishlist - HOMELIVING')
 
+@section('seo')
+    <x-seo
+        title="My Wishlist — HOMELIVING"
+        description="View your saved collections and favorite products on HOMELIVING."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="w-full px-4 lg:px-10 py-8 lg:py-16 relative z-10">
     {{-- Header --}}
@@ -20,13 +29,13 @@
     <div class="max-w-7xl mx-auto">
         @forelse($favorites as $product)
             <div class="group relative flex items-center gap-5 p-5 mb-4 rounded-2xl glass-morphism transition-all duration-300 hover:border-primary/30 cursor-pointer"
-                 onclick="window.location='{{ route('product.detail', $product->id) }}'">
+                 onclick="window.location='{{ route('product.detail', $product) }}'">
 
                 {{-- Image --}}
                 <div class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-xl overflow-hidden bg-white/10">
                     <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}"
                          alt="{{ $product->nama }}"
-                         class="w-full h-full object-cover">
+                         class="w-full h-full object-cover" loading="lazy">
                 </div>
 
                 {{-- Details --}}

@@ -29,10 +29,8 @@ class HomeController extends Controller
         return view('homepage.product');
     }
 
-    public function showProductDetail($id)
+    public function showProductDetail(Product $product)
     {
-        $product = Product::findOrFail($id);
-
         $isFavorited = auth()->check()
             && auth()->user()->favoriteProducts()->where('product_id', $product->id)->exists();
 
@@ -45,7 +43,7 @@ class HomeController extends Controller
         
         $products = Product::where('nama', 'like', "%{$query}%")
             ->limit(5)
-            ->get(['id', 'nama', 'harga', 'foto']);
+            ->get(['id', 'slug', 'nama', 'harga', 'foto']);
 
         return response()->json($products);
     }

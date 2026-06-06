@@ -3,8 +3,48 @@
 @section('title', 'HOMELIVING - ' . $product->nama)
 @section('body_class', 'bg-background-light dark:bg-background-dark font-sans text-charcoal dark:text-white transition-colors duration-300')
 
+@php
+    $productDescription = Str::limit(strip_tags($product->deskripsi ?? ''), 200);
+    $productImage = $product->gambar ? asset('storage/' . $product->gambar) : null;
+    $productSchema = json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => $product->nama,
+        'description' => Str::limit(strip_tags($product->deskripsi ?? ''), 160),
+        'image' => $productImage,
+    ]);
+@endphp
+
+@section('seo')
+    <x-seo
+        title="{{ $product->nama }} — HOMELIVING"
+        description="{{ Str::limit(strip_tags($product->deskripsi ?? ''), 160) }}"
+        url="{{ url()->current() }}"
+        type="product"
+        :image="$productImage"
+        :schema="$productSchema"
+    />
+@endsection
+
+@section('seo')
+    <x-seo
+        title="{{ $product->nama }} — HOMELIVING"
+        description="{{ Str::limit(strip_tags($product->deskripsi ?? ''), 160) }}"
+        url="{{ url()->current() }}"
+        type="product"
+        :image="$product->gambar ? asset('storage/' . $product->gambar) : null"
+        :schema="json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $product->nama,
+            'description' => Str::limit(strip_tags($product->deskripsi ?? ''), 200),
+            'image' => $product->gambar ? asset('storage/' . $product->gambar) : null,
+        ])"
+    />
+@endsection
+
 @section('content')
-<main class="w-full px-4 lg:px-10 py-8 lg:py-16">
+<main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10">
     <nav class="flex items-center gap-2 text-xs font-medium text-[#9a6c4c] dark:text-primary/70 mb-8 uppercase tracking-wider">
         <a class="hover:text-primary transition-colors" href="{{ route('homepage.home') }}">Home</a>
         <span class="material-symbols-outlined text-[14px]">chevron_right</span>

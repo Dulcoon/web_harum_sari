@@ -52,9 +52,9 @@ class ProductController extends Controller
         return redirect()->route('products.index', ['edit' => $product->id]);
     }
 
-    public function detail($id): View
+    public function detail($slug): View
     {
-        $product = Product::with('kategori')->findOrFail($id);
+        $product = Product::where('slug', $slug)->with('kategori')->firstOrFail();
 
         return view('products.detail', compact('product'));
     }

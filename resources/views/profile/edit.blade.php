@@ -2,6 +2,15 @@
 
 @section('title', 'My Profile | HOMELIVING')
 
+@section('seo')
+    <x-seo
+        title="My Profile — HOMELIVING"
+        description="Manage your HOMELIVING account settings, profile, and preferences."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10">
     @if (session('status') === 'profile-updated')

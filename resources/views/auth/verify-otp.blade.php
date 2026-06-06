@@ -2,6 +2,15 @@
 
 @section('title', 'Verify Email | HOMELIVING')
 
+@section('seo')
+    <x-seo
+        title="Verify Email — HOMELIVING"
+        description="Verify your email address to complete your HOMELIVING registration."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="min-h-screen flex items-center justify-center px-4 py-12 relative z-10">
     <div class="w-full max-w-md">

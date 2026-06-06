@@ -14,19 +14,9 @@
             {{ __('Edit Product') }}
           </x-primary-button>
         </a>
-        <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-        onsubmit="return confirm('Are you sure you want to delete this product?');">
-        @csrf
-        @method('DELETE')
-        <x-danger-button class="mt-4">
-          {{ __('Delete Product') }}
-        </x-danger-button>
-            </form>
-      </div>
-    </div>
+        <form action="{{ route('products.destroy', $product) }}" method="POST"
 
-    <div class="mt-4" x-data="{ imageUrl: '{{ $product->foto ? asset('storage/' . $product->foto) : '/storage/no_image.png' }}' }">
-      <form enctype="multipart/form-data" action="{{ route('products.update', $product->id) }}" method="POST" class="block lg:flex gap-3">
+      <form enctype="multipart/form-data" action="{{ route('products.update', $product) }}" method="POST" class="block lg:flex gap-3">
         @csrf
         @method('PUT')
         <div class="lg:w-1/2">

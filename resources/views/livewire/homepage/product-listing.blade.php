@@ -8,8 +8,8 @@
 
         <section class="lg:hidden mb-7" x-data="{ showMobileFilters: false }"
             @mobile-filter-applied.window="showMobileFilters = false">
-            <h2 class="text-[3.75rem] leading-[0.95] font-black tracking-tight text-[#1b1c1b] dark:text-white mb-5">
-                Curated<br />Living Space</h2>
+            <h1 class="text-[3.75rem] leading-[0.95] font-black tracking-tight text-[#1b1c1b] dark:text-white mb-5">
+                Curated<br />Living Space</h1>
             <div class="flex items-center gap-3">
                 <div
                     class="flex-1 flex items-center rounded-2xl px-4 py-3 border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5">
@@ -92,7 +92,7 @@
                         </button>
                     </div>
 
-                    <h4 class="font-bold text-base text-[#1b1c1b] dark:text-white">Nordic Summer Collection</h4>
+                    <h2 class="font-bold text-base text-[#1b1c1b] dark:text-white">Nordic Summer Collection</h2>
                     <p class="text-sm font-extrabold premium-text-gradient mt-1">Starting from Rp
                         {{ number_format(($products->first()->harga ?? 0), 0, ',', '.') }}</p>
 
@@ -107,8 +107,8 @@
                 </div>
 
                 <div class="glass-morphism rounded-2xl p-6 shadow-sm price-range-panel">
-                    <h4 class="text-xs font-black uppercase tracking-[0.15em] mb-6 text-[#6a5548] dark:text-white/50">
-                        Price Range</h4>
+                    <h3 class="text-xs font-black uppercase tracking-[0.15em] mb-6 text-[#6a5548] dark:text-white/50">
+                        Price Range</h3>
                     <div class="flex justify-between mb-5">
                         <div class="flex flex-col">
                             <span
@@ -144,8 +144,8 @@
                 </div>
 
                 <div class="glass-morphism rounded-2xl p-6 shadow-sm">
-                    <h4 class="text-xs font-black uppercase tracking-[0.15em] mb-6 text-[#6a5548] dark:text-white/50">
-                        Categories</h4>
+                    <h3 class="text-xs font-black uppercase tracking-[0.15em] mb-6 text-[#6a5548] dark:text-white/50">
+                        Categories</h3>
                     <div class="space-y-4">
                         <button type="button" wire:click="$set('kategoriId', null)"
                             class="w-full flex items-center justify-between cursor-pointer group">
@@ -305,13 +305,13 @@
                             $isFavorited = in_array($product->id, $favoriteProductIds);
                         @endphp
                         <article
-                            onclick="window.location='{{ route('product.detail', $product->id) }}'"
+                            onclick="window.location='{{ route('product.detail', $product) }}'"
                             class="product-glass-card rounded-3xl p-4 shadow-sm group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                             <div
                                 class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
                                 <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}"
                                     alt="{{ $product->nama }}"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
 
                                 @if($loop->first)
                                     <span

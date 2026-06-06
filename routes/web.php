@@ -17,8 +17,8 @@ use App\Http\Controllers\Api\CartApiController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SitemapController;
 
-use App\Http\Controllers\TransactionApiController;
 use App\Http\Controllers\MidtransController;
 
 // cicd test lagi
@@ -108,7 +108,7 @@ Route::get('/product', [HomeController::class, 'product'])->name(name: 'homepage
 Route::get('/products-cust', [HomeController::class, 'product'])->name('productss');
 Route::get('/', [HomeController::class, 'showHomePage'])->name('homepage.home');
 
-Route::get('/product/{id}', [HomeController::class, 'showProductDetail'])->name('product.detail');
+Route::get('/product/{product}', [HomeController::class, 'showProductDetail'])->name('product.detail');
 Route::get('/products/search-suggestions', [HomeController::class, 'searchSuggestions'])->name('products.search.suggestions');
 
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -152,6 +152,8 @@ Route::get('/api/products/{id}', [ProductApiController::class, 'show']);
 
 Route::get('/success', [MidtransController::class, 'success'])->name('success');
 Route::post('/api/notification', [MidtransController::class, 'handleNotification'])->name('notification');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 
 Route::post('/api/transaction', [MidtransController::class, 'createTransaction']);

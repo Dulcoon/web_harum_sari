@@ -8,6 +8,7 @@ class Product extends Model
 {
     protected $fillable = [
         'nama',
+        'slug',
         'harga',
         'deskripsi',
         'kategori_id',
@@ -19,6 +20,11 @@ class Product extends Model
     public function kategori()
     {
         return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 
     public function transactions()

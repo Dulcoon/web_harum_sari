@@ -2,6 +2,15 @@
 
 @section('title', 'HOMELIVING | Home')
 
+@section('seo')
+    <x-seo
+        title="HOMELIVING | Home"
+        description="Discover HOMELIVING — curated Scandinavian furniture designed for comfort, longevity, and timeless aesthetic appeal. Shop modern living essentials."
+        url="{{ url('/') }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10 space-y-10">
     <section class="relative overflow-hidden rounded-[2.5rem] min-h-[520px] lg:min-h-[620px] flex items-center p-6 md:p-8 lg:p-12 border border-black/10 dark:border-white/10">
@@ -83,11 +92,11 @@
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
             @foreach($featuredProducts as $product)
                 @php $isFavorited = in_array($product->id, $favoriteProductIds ?? []); @endphp
-                <article onclick="window.location='{{ route('product.detail', $product->id) }}'"
+                <article onclick="window.location='{{ route('product.detail', $product) }}'"
                     class="product-glass-card rounded-3xl p-4 group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                     <div class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}" alt="{{ $product->nama }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy"/>
 
                         <span class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">Sale</span>
 

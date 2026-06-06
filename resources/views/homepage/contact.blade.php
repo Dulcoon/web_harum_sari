@@ -2,6 +2,15 @@
 
 @section('title', 'HOMELIVING | Contact Us')
 
+@section('seo')
+    <x-seo
+        title="HOMELIVING | Contact Us"
+        description="Get in touch with the HOMELIVING team. Visit our showroom, send us a message, or follow us on social media for the latest updates."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10 space-y-8">
     <section class="glass-morphism rounded-[2.2rem] p-7 md:p-10 lg:p-14">

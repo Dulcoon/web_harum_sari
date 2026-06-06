@@ -29,9 +29,13 @@ class ProductApiController extends Controller
     
     
 
-    public function show($id)
+    public function show($slug)
     {
-        $product = Product::find($id);
+        $product = Product::where('slug', $slug)->first();
+
+        if (!$product) {
+            $product = Product::find($slug);
+        }
     
         if ($product) {
             return response()->json([

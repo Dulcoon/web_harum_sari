@@ -2,6 +2,15 @@
 
 @section('title', 'Complete Profile | HOMELIVING')
 
+@section('seo')
+    <x-seo
+        title="Complete Profile — HOMELIVING"
+        description="Complete your HOMELIVING profile setup."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="min-h-screen flex items-center justify-center px-4 py-12 relative z-10">
     <div class="w-full max-w-md">

@@ -3,6 +3,15 @@
 @section('title', 'Login | HOMELIVING')
 @section('body_class', 'bg-surface font-body text-on-surface selection:bg-primary-fixed min-h-screen')
 
+@section('seo')
+    <x-seo
+        title="Sign In — HOMELIVING"
+        description="Sign in to your HOMELIVING account to access your curated space and saved collections."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main class="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
     <div class="absolute top-0 right-0 w-1/3 h-full bg-surface-container-low -z-10 translate-x-1/4"></div>

@@ -3,6 +3,15 @@
 @section('title', 'Category Product - HOMELIVING')
 @section('body_class', 'bg-grey-100')
 
+@section('seo')
+    <x-seo
+        title="Category — HOMELIVING"
+        description="Browse furniture by category on HOMELIVING."
+        url="{{ url()->current() }}"
+        type="website"
+    />
+@endsection
+
 @section('content')
 <main>
     <section id="section3" class="kategori mb-60 px-6 lg:px-10">
@@ -23,7 +32,7 @@
                             <p class="font-normal text-sm bg-white p-1 px-3 border rounded-full shadow-lg">Sale!</p>
                         </div>
                         <div class="gambar w-full aspect-square overflow-hidden rounded-t-lg">
-                            <img alt="" class="w-full h-full object-cover" src="{{ asset('storage/' .$product->foto) }}" />
+                            <img alt="{{ $product->nama ?? 'Product' }}" class="w-full h-full object-cover" src="{{ asset('storage/' .$product->foto) }}" loading="lazy" />
                         </div>
                         <div class="bg-[#f1f3f2] mt-4 w-full p-2 mb-4 rounded-b-lg">
                             <p class="font-normal text-xl">{{ $product->nama }}</p>
