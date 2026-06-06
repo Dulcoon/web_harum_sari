@@ -82,16 +82,22 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
             @foreach($featuredProducts as $product)
-                <article class="product-glass-card rounded-3xl p-4 group transition-all duration-300 hover:-translate-y-1">
-                    <div class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5 flex items-center justify-center p-4 md:p-8">
+                @php $isFavorited = in_array($product->id, $favoriteProductIds ?? []); @endphp
+                <article onclick="window.location='{{ route('product.detail', $product->id) }}'"
+                    class="product-glass-card rounded-3xl p-4 group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                    <div class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}" alt="{{ $product->nama }}"
-                            class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"/>
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
 
                         <span class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">Sale</span>
 
-                        <a href="{{ route('product.detail', $product->id) }}" class="absolute bottom-3 right-3 w-8 h-8 md:w-9 md:h-9 bg-premium-gradient text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
-                            <span class="material-symbols-outlined text-base">add</span>
-                        </a>
+                        <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="absolute top-3 right-3">
+                            @csrf
+                            <button type="submit" onclick="event.stopPropagation()"
+                                class="w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/50 hover:text-primary' }}">
+                                <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                            </button>
+                        </form>
                     </div>
 
                     <div class="px-1 space-y-1.5">

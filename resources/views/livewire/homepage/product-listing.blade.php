@@ -187,11 +187,19 @@
 
             <section class="flex-1 space-y-8">
                 <div
-                    class="relative glass-morphism rounded-[2.5rem] p-7 md:p-10 lg:p-14 overflow-hidden shadow-warm flex flex-col md:flex-row items-center gap-8 min-h-[320px]">
+                    class="relative glass-morphism rounded-[2.5rem] p-7 md:p-10 lg:p-14 overflow-hidden shadow-warm min-h-[320px]">
                     <div class="absolute -top-20 -right-20 w-72 h-72 bg-orange-500/20 rounded-full blur-[80px]"></div>
                     <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-primary/15 rounded-full blur-[80px]"></div>
 
-                    <div class="z-10 flex-1 space-y-5 text-center md:text-left">
+                    {{-- Full-height image on the right --}}
+                    <div class="absolute inset-y-0 right-0 w-1/2 md:w-3/5 overflow-hidden rounded-r-[2.5rem]">
+                        <img src="{{ asset('assets/Gemini_Generated_Image_meakqgmeakqgmeak.png') }}" alt="Hero Sofa"
+                            class="h-full w-full object-cover drop-shadow-[0_35px_35px_rgba(212,98,17,0.35)] hover:rotate-2 transition-transform duration-700" />
+                        <div class="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-[#f9f4ed] dark:from-[#221810] to-transparent pointer-events-none"></div>
+                    </div>
+
+                    {{-- Text content --}}
+                    <div class="relative z-10 max-w-lg space-y-5 text-center md:text-left">
                         <span
                             class="inline-block px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">Seasonal
                             Sale</span>
@@ -208,13 +216,6 @@
                                 class="glass-morphism px-7 py-3.5 rounded-2xl font-black text-sm hover:bg-white/10 transition-all text-[#1b1c1b] dark:text-white border-white/10">View
                                 Lookbook</button>
                         </div>
-                    </div>
-
-                    <div class="relative w-full md:w-1/2 flex items-center justify-center">
-                        <div class="absolute w-56 h-56 bg-premium-gradient/30 rounded-full blur-[50px] animate-pulse">
-                        </div>
-                        <img src="{{ asset('assets/Gemini_Generated_Image_meakqgmeakqgmeak.png') }}" alt="Hero Sofa"
-                            class="relative z-10 w-full max-w-[360px] drop-shadow-[0_35px_35px_rgba(212,98,17,0.35)] hover:rotate-2 transition-transform duration-700" />
                     </div>
                 </div>
 
@@ -300,28 +301,31 @@
 
                 <div wire:loading.remove class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
                     @forelse ($products as $product)
+                        @php
+                            $isFavorited = in_array($product->id, $favoriteProductIds);
+                        @endphp
                         <article
-                            class="product-glass-card rounded-3xl p-4 shadow-sm group transition-all duration-300 hover:-translate-y-1">
+                            onclick="window.location='{{ route('product.detail', $product->id) }}'"
+                            class="product-glass-card rounded-3xl p-4 shadow-sm group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                             <div
-                                class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5 flex items-center justify-center p-4 md:p-8">
+                                class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
                                 <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.png') }}"
                                     alt="{{ $product->nama }}"
-                                    class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-1000" />
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" />
 
                                 @if($loop->first)
                                     <span
                                         class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">New</span>
                                 @endif
 
-                                <button type="button"
-                                    class="absolute top-3 right-3 w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center text-white/50 hover:text-primary transition-all hover:scale-110">
-                                    <span class="material-symbols-outlined text-lg md:text-xl">favorite</span>
-                                </button>
-
-                                <a href="{{ route('product.detail', $product->id) }}"
-                                    class="absolute bottom-3 right-3 w-8 h-8 md:w-9 md:h-9 bg-premium-gradient text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all">
-                                    <span class="material-symbols-outlined text-base">add</span>
-                                </a>
+                                <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="absolute top-3 right-3">
+                                    @csrf
+                                    <button type="submit"
+                                        onclick="event.stopPropagation()"
+                                        class="w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/50 hover:text-primary' }}">
+                                        <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                                    </button>
+                                </form>
                             </div>
 
                             <div class="px-1 space-y-1.5">

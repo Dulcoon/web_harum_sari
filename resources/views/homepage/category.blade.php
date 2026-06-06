@@ -22,8 +22,8 @@
                         <div class="sale absolute left-5 top-5">
                             <p class="font-normal text-sm bg-white p-1 px-3 border rounded-full shadow-lg">Sale!</p>
                         </div>
-                        <div class="gambar w-full h-full">
-                            <img alt="" class="mx-auto object-cover h-52 w-auto rounded-t-lg" src="{{ asset('storage/' .$product->foto) }}" />
+                        <div class="gambar w-full aspect-square overflow-hidden rounded-t-lg">
+                            <img alt="" class="w-full h-full object-cover" src="{{ asset('storage/' .$product->foto) }}" />
                         </div>
                         <div class="bg-[#f1f3f2] mt-4 w-full p-2 mb-4 rounded-b-lg">
                             <p class="font-normal text-xl">{{ $product->nama }}</p>

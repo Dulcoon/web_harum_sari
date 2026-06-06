@@ -29,9 +29,9 @@
                 </div>
             </div>
 
-            <button type="button" class="hidden md:inline-flex p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Wishlist">
+            <a href="{{ route('wishlist.index') }}" class="hidden md:inline-flex p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Wishlist">
                 <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">favorite</span>
-            </button>
+            </a>
 
             <button id="theme-toggle-btn" type="button" class="p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Toggle dark mode">
                 <span id="theme-toggle-icon" class="material-symbols-outlined text-[#2a2019] dark:text-white/80">light_mode</span>
@@ -47,12 +47,6 @@
                 </a>
             @endauth
 
-            <a href="{{ route('cart.index') }}" class="p-2.5 bg-black/[0.04] hover:bg-black/[0.08] dark:bg-white/5 dark:hover:bg-white/10 rounded-full transition-all relative" aria-label="Cart">
-                <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">shopping_bag</span>
-                @if(session('cart_count', 0) > 0)
-                    <span class="absolute top-1 right-1 w-4 h-4 bg-premium-gradient text-white text-[10px] flex items-center justify-center rounded-full font-bold shadow-sm shadow-primary/40">{{ session('cart_count') }}</span>
-                @endif
-            </a>
         </div>
     </div>
 </header>

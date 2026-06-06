@@ -24,17 +24,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if ($user && is_null($user->email_verified_at)) {
+            return redirect()->route('verify-otp', ['email' => $user->email])
+                ->with('error', 'Please verify your email before logging in.');
+        }
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
         if (Auth::user()->role === 'admin') {
-            return redirect()->intended(route('dashboard')); 
+            return redirect()->intended(route('dashboard'));
         }
-    
+
         if (Auth::user()->role === 'customer') {
-            return redirect()->intended(route('homepage.home')); 
+            return redirect()->intended(route('homepage.home'));
         }
 
         return redirect()->intended(route('dashboard', absolute: false));

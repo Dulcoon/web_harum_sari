@@ -50,7 +50,7 @@
             @if($product)
               <div class="flex items-center justify-between p-4 bg-white shadow rounded">
                 <div class="flex items-center">
-                  <img src="{{ asset('storage/' . $product->foto) }}" alt="{{ $product->nama }}" class="w-[220] h-[220] object-cover mr-4">
+                  <img src="{{ asset('storage/' . $product->foto) }}" alt="{{ $product->nama }}" class="w-[220px] h-[220px] object-cover rounded-lg mr-4">
                   <div>
                     <h2 class="text-lg font-bold">{{ $product->nama }}</h2>
                     <p class="text-gray-500">Quantity: 

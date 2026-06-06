@@ -140,7 +140,7 @@
         </button>
     </div>
 
-    <section class="relative z-10 rounded-3xl glass-table p-6">
+    <section class="relative z-10 rounded-3xl glass-table p-4 sm:p-6">
         <div wire:loading.flex wire:target="applyFilters,previousPage,nextPage,gotoPage,status,kategoriId,search" class="absolute inset-0 z-20 items-center justify-center rounded-3xl bg-white/45 backdrop-blur-sm dark:bg-black/30">
             <div class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#4e4139] shadow dark:bg-[#0f1116]/90 dark:text-white">
                 <span class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
@@ -148,15 +148,67 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage,status,kategoriId,search">
-            <table class="w-full min-w-[920px]">
+        {{-- Mobile: card list --}}
+        <div class="space-y-4 sm:hidden" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage,status,kategoriId,search">
+            @forelse($products as $product)
+                @php
+                    $imageUrl = $product->foto ? asset('storage/' . ltrim($product->foto, '/')) : $defaultThumb;
+                    $badgeClass = $product->featured_products
+                        ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/25'
+                        : 'bg-gray-500/15 text-gray-600 dark:text-gray-400 border border-gray-500/20';
+                @endphp
+                <div class="overflow-hidden rounded-2xl border border-[#eadfd4] bg-white/60 shadow-sm dark:border-white/10 dark:bg-white/5">
+                    <div class="aspect-[4/3] overflow-hidden bg-[#efe6dd] dark:bg-white/5">
+                        <img src="{{ $imageUrl }}" alt="{{ $product->nama }}" class="h-full w-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="min-w-0 flex-1">
+                                <p class="text-base font-bold leading-tight">{{ $product->nama }}</p>
+                                <p class="mt-0.5 text-xs text-[#8b7266] dark:text-[#9a6c4c]">SKU: HL-2024-{{ str_pad((string) $product->id, 3, '0', STR_PAD_LEFT) }}</p>
+                            </div>
+                            <span class="shrink-0 text-base font-bold text-primary">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="inline-flex rounded-full border border-[#eadfd4] bg-white/70 px-2.5 py-0.5 text-[10px] font-medium text-[#4e4139] dark:border-white/10 dark:bg-white/5 dark:text-white/80">
+                                {{ $product->kategori?->nama ?? 'Uncategorized' }}
+                            </span>
+                            <span class="rounded-full px-2.5 py-0.5 text-[10px] font-semibold {{ $badgeClass }}">
+                                {{ $product->featured_products ? 'Active' : 'Draft' }}
+                            </span>
+                            @if($product->stok <= 0)
+                                <span class="text-[10px] font-semibold text-red-600 dark:text-red-400">Out of Stock</span>
+                            @else
+                                <span class="text-[10px] text-[#6e5a50] dark:text-[#b89983]">{{ $product->stok }} left</span>
+                            @endif
+                        </div>
+                        <div class="mt-4 flex gap-3">
+                            <button type="button" @click="openEdit({ id: {{ $product->id }}, nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#eadfd4] bg-white/70 px-4 py-2.5 text-xs font-bold text-[#4e4139] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/80">
+                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                                Edit
+                            </button>
+                            <button type="button" @click="openDelete({ id: {{ $product->id }}, nama: @js($product->nama) })" class="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-red-200 bg-red-50/80 px-4 py-2.5 text-xs font-bold text-red-600 transition-colors hover:bg-red-100 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
+                                <span class="material-symbols-outlined text-[16px]">delete</span>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="py-12 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">No products found.</p>
+            @endforelse
+        </div>
+
+        {{-- Desktop: table --}}
+        <div class="hidden sm:block overflow-x-auto" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage,status,kategoriId,search">
+            <table class="w-full">
                 <thead>
                     <tr class="border-b border-[#eadfd4] text-left text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7266] dark:border-white/10 dark:text-[#9a6c4c]">
-                        <th class="pb-4">Product</th>
-                        <th class="pb-4">Category</th>
-                        <th class="pb-4">Price</th>
-                        <th class="pb-4">Stock Level</th>
-                        <th class="pb-4">Status</th>
+                        <th class="pb-4 pr-2">Product</th>
+                        <th class="pb-4 pr-2">Category</th>
+                        <th class="pb-4 pr-2">Price</th>
+                        <th class="pb-4 pr-2">Stock Level</th>
+                        <th class="pb-4 pr-2">Status</th>
                         <th class="pb-4 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -170,54 +222,44 @@
                                 : 'bg-gray-500/15 text-gray-600 dark:text-gray-400 border border-gray-500/20';
                         @endphp
                         <tr class="hover:bg-white/30 dark:hover:bg-white/5">
-                            <td class="py-5">
+                            <td class="py-5 pr-2">
                                 <div class="flex items-center gap-4">
-                                    <img src="{{ $imageUrl }}" alt="{{ $product->nama }}" class="h-14 w-14 rounded-xl border border-[#eadfd4] object-cover dark:border-white/10">
-                                    <div>
-                                        <p class="text-sm font-bold leading-tight">{{ $product->nama }}</p>
+                                    <img src="{{ $imageUrl }}" alt="{{ $product->nama }}" class="h-14 w-14 shrink-0 rounded-xl border border-[#eadfd4] object-cover dark:border-white/10">
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm font-bold leading-tight">{{ $product->nama }}</p>
                                         <p class="mt-1 text-xs text-[#8b7266] dark:text-[#9a6c4c]">SKU: HL-2024-{{ str_pad((string) $product->id, 3, '0', STR_PAD_LEFT) }}</p>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-5">
+                            <td class="py-5 pr-2">
                                 <span class="inline-flex rounded-full border border-[#eadfd4] bg-white/70 px-3 py-1 text-xs text-[#4e4139] dark:border-white/10 dark:bg-white/5 dark:text-white/80">
                                     {{ $product->kategori?->nama ?? 'Uncategorized' }}
                                 </span>
                             </td>
-                            <td class="py-5 text-xl font-semibold">Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
-                            <td class="py-5">
+                            <td class="py-5 pr-2 text-xl font-semibold">Rp {{ number_format($product->harga, 0, ',', '.') }}</td>
+                            <td class="py-5 pr-2">
                                 <div class="flex items-center gap-3">
                                     <div class="h-1.5 w-28 overflow-hidden rounded-full bg-[#dccfc4] dark:bg-white/10">
                                         <div class="h-full rounded-full bg-primary" style="width: {{ max(0, min(100, $progress)) }}%"></div>
                                     </div>
                                     @if($product->stok > 0)
-                                        <span class="text-sm font-medium">{{ $product->stok }} left</span>
+                                        <span class="whitespace-nowrap text-sm font-medium">{{ $product->stok }} left</span>
                                     @else
-                                        <span class="text-sm font-semibold text-red-600 dark:text-red-400">Out of Stock</span>
+                                        <span class="whitespace-nowrap text-sm font-semibold text-red-600 dark:text-red-400">Out of Stock</span>
                                     @endif
                                 </div>
                             </td>
-                            <td class="py-5">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $statusBadgeClass }}">
+                            <td class="py-5 pr-2">
+                                <span class="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold {{ $statusBadgeClass }}">
                                     {{ $product->featured_products ? 'Active' : 'Draft' }}
                                 </span>
                             </td>
                             <td class="py-5">
                                 <div class="flex items-center justify-end gap-2">
-                                    <button
-                                        type="button"
-                                        @click="openEdit({ id: {{ $product->id }}, nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })"
-                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70"
-                                        aria-label="Edit {{ $product->nama }}"
-                                    >
+                                    <button type="button" @click="openEdit({ id: {{ $product->id }}, nama: @js($product->nama), harga: {{ (float) $product->harga }}, deskripsi: @js($product->deskripsi), kategori_id: '{{ (string) $product->kategori_id }}', featured_products: '{{ (int) $product->featured_products }}', stok: {{ (int) $product->stok }}, foto: @js($imageUrl) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70">
                                         <span class="material-symbols-outlined text-[17px]">edit</span>
                                     </button>
-                                    <button
-                                        type="button"
-                                        @click="openDelete({ id: {{ $product->id }}, nama: @js($product->nama) })"
-                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70"
-                                        aria-label="Delete {{ $product->nama }}"
-                                    >
+                                    <button type="button" @click="openDelete({ id: {{ $product->id }}, nama: @js($product->nama) })" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
                                         <span class="material-symbols-outlined text-[17px]">delete</span>
                                     </button>
                                 </div>
@@ -261,10 +303,11 @@
         </div>
     </section>
 
-    <div x-cloak x-show="createOpen" class="fixed inset-0 z-[90] flex items-center justify-center p-4" @keydown.escape.window="createOpen = false">
-        <div class="absolute inset-0 bg-black/35" @click="createOpen = false"></div>
-        <div class="relative w-full max-w-3xl rounded-2xl glass-panel p-6 md:p-8">
-            <div class="mb-5 flex items-center justify-between">
+    <div x-cloak x-show="createOpen" class="fixed inset-0 z-[90] overflow-y-auto" @keydown.escape.window="createOpen = false">
+        <div class="fixed inset-0 bg-black/35" @click="createOpen = false"></div>
+        <div class="relative flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-3xl rounded-2xl glass-panel p-4 md:p-8 my-8">
+            <div class="mb-4 flex items-center justify-between md:mb-5">
                 <h4 class="text-2xl font-semibold">Add New Product</h4>
                 <button @click="createOpen = false" class="rounded-full p-2 transition-colors hover:bg-white/40" type="button">
                     <span class="material-symbols-outlined">close</span>
@@ -328,11 +371,13 @@
             </form>
         </div>
     </div>
+</div>
 
-    <div x-cloak x-show="editOpen" class="fixed inset-0 z-[92] flex items-center justify-center p-4" @keydown.escape.window="editOpen = false">
-        <div class="absolute inset-0 bg-black/35" @click="editOpen = false"></div>
-        <div class="relative w-full max-w-3xl rounded-2xl glass-panel p-6 md:p-8">
-            <div class="mb-5 flex items-center justify-between">
+    <div x-cloak x-show="editOpen" class="fixed inset-0 z-[92] overflow-y-auto" @keydown.escape.window="editOpen = false">
+        <div class="fixed inset-0 bg-black/35" @click="editOpen = false"></div>
+        <div class="relative flex min-h-full items-center justify-center p-4">
+            <div class="relative w-full max-w-3xl rounded-2xl glass-panel p-4 md:p-8 my-8">
+            <div class="mb-4 flex items-center justify-between md:mb-5">
                 <h4 class="text-2xl font-semibold">Edit Product</h4>
                 <button @click="editOpen = false" class="rounded-full p-2 transition-colors hover:bg-white/40" type="button">
                     <span class="material-symbols-outlined">close</span>
@@ -398,6 +443,7 @@
             </form>
         </div>
     </div>
+</div>
 
     <div x-cloak x-show="deleteOpen" class="fixed inset-0 z-[95] flex items-center justify-center p-4" @keydown.escape.window="deleteOpen = false">
         <div class="absolute inset-0 bg-black/35" @click="deleteOpen = false"></div>

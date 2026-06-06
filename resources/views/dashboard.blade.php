@@ -4,7 +4,6 @@
     topbar-placeholder="Search analytics..."
     :admin-name="$adminName"
     admin-role="Chief Curator"
-    content-class="space-y-8 px-8 py-8"
 >
     <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -90,14 +89,42 @@
             </div>
         </article>
 
-        <article class="col-span-12 rounded-3xl border border-[#eadfd4] bg-white/70 p-7 shadow-sm dark:border-white/10 dark:bg-white/5 lg:col-span-9">
+        <article class="col-span-12 rounded-3xl border border-[#eadfd4] bg-white/70 p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7 lg:col-span-9">
             <div class="mb-6 flex items-center justify-between gap-4">
-                <h3 class="text-3xl font-bold tracking-tight">Recent Orders</h3>
+                <h3 class="text-2xl font-bold tracking-tight sm:text-3xl">Recent Orders</h3>
                 <a href="#" class="text-xs font-bold uppercase tracking-[0.18em] text-primary">View All Orders</a>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full min-w-[760px]">
+            {{-- Mobile: card list --}}
+            <div class="divide-y divide-[#efe6dd] dark:divide-white/10 sm:hidden">
+                @forelse($recentOrders as $order)
+                    @php
+                        $status = strtolower((string) $order['status']);
+                        $statusClass = match ($status) {
+                            'paid', 'completed', 'shipped' => 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
+                            'cancelled' => 'bg-gray-500/15 text-gray-500 border border-gray-500/20',
+                            default => 'bg-primary/15 text-primary border border-primary/20',
+                        };
+                    @endphp
+                    <div class="flex items-center justify-between gap-3 py-4">
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-bold">{{ $order['order_number'] }}</p>
+                            <p class="mt-0.5 truncate text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $order['customer_name'] }} &middot; {{ $order['product_name'] }}</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider {{ $statusClass }}">{{ str_replace('_', ' ', $order['status']) }}</span>
+                                <span class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $order['date'] }}</span>
+                            </div>
+                        </div>
+                        <span class="shrink-0 text-sm font-bold">Rp {{ number_format($order['amount'], 0, ',', '.') }}</span>
+                    </div>
+                @empty
+                    <p class="py-8 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">No order data available yet.</p>
+                @endforelse
+            </div>
+
+            {{-- Desktop: table --}}
+            <div class="hidden overflow-x-auto sm:block">
+                <table class="w-full">
                     <thead>
                         <tr class="border-b border-[#eadfd4] text-left text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7266] dark:border-white/10 dark:text-[#9a6c4c]">
                             <th class="pb-4">Order ID</th>
@@ -111,8 +138,8 @@
                     <tbody class="divide-y divide-[#efe6dd] dark:divide-white/10">
                         @forelse($recentOrders as $order)
                             @php
-                                $status = strtolower((string) $order['status']);
-                                $statusClass = match ($status) {
+                                $s = strtolower((string) $order['status']);
+                                $statusClass = match ($s) {
                                     'paid', 'completed', 'shipped' => 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
                                     'cancelled' => 'bg-gray-500/15 text-gray-500 border border-gray-500/20',
                                     default => 'bg-primary/15 text-primary border border-primary/20',

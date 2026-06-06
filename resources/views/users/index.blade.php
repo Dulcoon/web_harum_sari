@@ -6,39 +6,7 @@
     topbar-search-name="q"
     :topbar-search-value="request('q', '')"
     admin-role="Manager"
-    content-class="px-4 pb-20 pt-8 lg:px-10"
 >
-    <x-slot:head>
-        <style>
-            .glass-panel {
-                background: rgba(255, 255, 255, 0.45);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.5);
-                box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
-            }
-
-            .glass-table {
-                background: rgba(255, 255, 255, 0.56);
-                border: 1px solid rgba(255, 255, 255, 0.62);
-                box-shadow: 0 8px 28px rgba(31, 38, 135, 0.08);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-            }
-
-            html.dark .glass-panel,
-            html.dark .glass-table {
-                background: rgba(15, 17, 22, 0.7);
-                border-color: rgba(255, 255, 255, 0.08);
-                box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
-            }
-
-            [x-cloak] {
-                display: none !important;
-            }
-        </style>
-    </x-slot:head>
-
     <livewire:admin.user-management />
 
     <x-slot:scripts>

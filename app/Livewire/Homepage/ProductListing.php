@@ -83,11 +83,16 @@ class ProductListing extends Component
                 break;
         }
 
-        $products = $query->paginate(10);
+        $products = $query->paginate(12);
+
+        $favoriteProductIds = auth()->check()
+            ? auth()->user()->favoriteProducts()->pluck('product_id')->toArray()
+            : [];
 
         return view('livewire.homepage.product-listing', [
             'kategories' => $kategories,
             'products' => $products,
+            'favoriteProductIds' => $favoriteProductIds,
         ]);
     }
 }

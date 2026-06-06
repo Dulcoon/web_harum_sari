@@ -15,14 +15,22 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <div class="space-y-4">
-            <div class="aspect-[4/5] bg-white dark:bg-white/5 rounded-2xl overflow-hidden flex items-center justify-center p-8 border border-border-beige dark:border-white/10 shadow-sm relative group">
-                <img class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+            <div class="rounded-2xl overflow-hidden border border-border-beige dark:border-white/10 shadow-sm relative group">
+                <img class="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                      alt="{{ $product->nama }}"
                      src="{{ asset('storage/' . $product->foto) }}"/>
 
                  <span class="absolute top-6 left-6 bg-charcoal text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
                     In Stock
                 </span>
+
+                <form method="POST" action="{{ route('wishlist.toggle', $product->id) }}" class="absolute top-6 right-6">
+                    @csrf
+                    <button type="submit"
+                        class="w-10 h-10 glass-morphism !bg-black/40 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/70 hover:text-primary' }}">
+                        <span class="material-symbols-outlined text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -46,26 +54,6 @@
             </div>
 
             <div class="space-y-4">
-                <form action="{{ route('cart.add') }}" method="POST" class="flex flex-col sm:flex-row gap-4">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                    <div class="flex items-center bg-white dark:bg-white/5 border border-border-beige dark:border-white/10 rounded-xl px-4 py-2 w-full sm:w-32">
-                        <button type="button" onclick="this.nextElementSibling.stepDown()" class="text-gray-500 hover:text-primary transition-colors">
-                            <span class="material-symbols-outlined text-sm">remove</span>
-                        </button>
-                        <input type="number" name="quantity" value="1" min="1" class="w-full bg-transparent border-none text-center font-bold text-lg focus:ring-0 p-0" readonly>
-                        <button type="button" onclick="this.previousElementSibling.stepUp()" class="text-gray-500 hover:text-primary transition-colors">
-                            <span class="material-symbols-outlined text-sm">add</span>
-                        </button>
-                    </div>
-
-                    <button type="submit" class="flex-1 bg-primary hover:bg-primary/90 text-white font-bold px-8 py-4 rounded-xl shadow-lg shadow-primary/30 transition-all flex items-center justify-center gap-2 group">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        Add to Cart
-                    </button>
-                </form>
-
                 <a href="https://wa.me/6287744083275?text=Hello, I would like to inquire about the product {{ $product->nama }}."
                    target="_blank"
                    class="flex w-full items-center justify-center gap-2 border-2 border-border-beige dark:border-white/10 hover:border-green-500 hover:text-green-600 text-gray-600 dark:text-gray-300 font-bold px-8 py-4 rounded-xl transition-all">

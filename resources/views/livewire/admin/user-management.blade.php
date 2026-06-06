@@ -140,7 +140,7 @@
         </button>
     </div>
 
-    <section class="relative z-10 rounded-3xl glass-table p-6">
+    <section class="relative z-10 rounded-3xl glass-table p-4 sm:p-6">
         <div wire:loading.flex wire:target="applyFilters,previousPage,nextPage,gotoPage" class="pointer-events-none absolute inset-0 z-20 items-center justify-center rounded-3xl bg-white/45 backdrop-blur-sm dark:bg-black/30">
             <div class="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#4e4139] shadow dark:bg-[#0f1116]/90 dark:text-white">
                 <span class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></span>
@@ -148,14 +148,57 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage">
-            <table class="w-full min-w-[920px]">
+        {{-- Mobile: card list --}}
+        <div class="divide-y divide-[#efe6dd] dark:divide-white/10 sm:hidden" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage">
+            @forelse($users as $user)
+                @php
+                    $role = $user->role ?? 'customer';
+                    $isVerified = ! is_null($user->email_verified_at);
+                    $roleBadgeClass = $role === 'admin'
+                        ? 'bg-primary/15 text-primary border border-primary/20'
+                        : 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20';
+                    $verificationBadgeClass = $isVerified
+                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25'
+                        : 'bg-gray-500/15 text-gray-600 dark:text-gray-400 border border-gray-500/20';
+                    $avatar = 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=994200&color=fff';
+                @endphp
+                <div wire:key="user-row-{{ $user->id }}" class="flex items-start gap-3 py-4">
+                    <img src="{{ $avatar }}" alt="{{ $user->name }}" class="h-10 w-10 shrink-0 rounded-full border border-[#eadfd4] object-cover dark:border-white/10">
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-bold leading-tight">{{ $user->name }}</p>
+                        <p class="truncate text-xs text-[#8b7266] dark:text-[#9a6c4c]">{{ $user->email }}</p>
+                        <div class="mt-2 flex flex-wrap items-center gap-2">
+                            <span class="rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide {{ $roleBadgeClass }}">{{ $role }}</span>
+                            <span class="rounded-full px-2.5 py-0.5 text-[10px] font-semibold {{ $verificationBadgeClass }}">{{ $isVerified ? 'Verified' : 'Unverified' }}</span>
+                            <span class="text-[10px] text-[#6e5a50] dark:text-[#b89983]">{{ $user->created_at?->format('d M Y') ?? '-' }}</span>
+                        </div>
+                        <div class="mt-2 flex gap-2">
+                            <a href="{{ route('users.edit', $user) }}" @click="openEdit({ id: {{ $user->id }}, name: @js($user->name), email: @js($user->email), role: @js($role), verification_status: @js($isVerified ? 'verified' : 'unverified') })" @click.prevent class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                            </a>
+                            <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?');">
+                                @csrf @method('DELETE')
+                                <button type="submit" @click.prevent="openDelete({ id: {{ $user->id }}, name: @js($user->name) })" class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
+                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="py-12 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">No users found.</p>
+            @endforelse
+        </div>
+
+        {{-- Desktop: table --}}
+        <div class="hidden sm:block overflow-x-auto" wire:loading.class="opacity-60" wire:target="applyFilters,previousPage,nextPage,gotoPage">
+            <table class="w-full">
                 <thead>
                     <tr class="border-b border-[#eadfd4] text-left text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7266] dark:border-white/10 dark:text-[#9a6c4c]">
-                        <th class="pb-4">User</th>
-                        <th class="pb-4">Role</th>
-                        <th class="pb-4">Verification</th>
-                        <th class="pb-4">Joined</th>
+                        <th class="pb-4 pr-2">User</th>
+                        <th class="pb-4 pr-2">Role</th>
+                        <th class="pb-4 pr-2">Verification</th>
+                        <th class="pb-4 pr-2">Joined</th>
                         <th class="pb-4 text-right">Actions</th>
                     </tr>
                 </thead>
@@ -173,26 +216,26 @@
                             $avatar = 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=994200&color=fff';
                         @endphp
                         <tr wire:key="user-row-{{ $user->id }}" class="hover:bg-white/30 dark:hover:bg-white/5">
-                            <td class="py-5">
+                            <td class="py-5 pr-2">
                                 <div class="flex items-center gap-4">
-                                    <img src="{{ $avatar }}" alt="{{ $user->name }}" class="h-11 w-11 rounded-full border border-[#eadfd4] object-cover dark:border-white/10">
-                                    <div>
-                                        <p class="text-sm font-bold leading-tight">{{ $user->name }}</p>
-                                        <p class="mt-1 text-xs text-[#8b7266] dark:text-[#9a6c4c]">{{ $user->email }}</p>
+                                    <img src="{{ $avatar }}" alt="{{ $user->name }}" class="h-11 w-11 shrink-0 rounded-full border border-[#eadfd4] object-cover dark:border-white/10">
+                                    <div class="min-w-0">
+                                        <p class="truncate text-sm font-bold leading-tight">{{ $user->name }}</p>
+                                        <p class="mt-1 truncate text-xs text-[#8b7266] dark:text-[#9a6c4c]">{{ $user->email }}</p>
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-5">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide {{ $roleBadgeClass }}">
+                            <td class="py-5 pr-2">
+                                <span class="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide {{ $roleBadgeClass }}">
                                     {{ $role }}
                                 </span>
                             </td>
-                            <td class="py-5">
-                                <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $verificationBadgeClass }}">
+                            <td class="py-5 pr-2">
+                                <span class="whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold {{ $verificationBadgeClass }}">
                                     {{ $isVerified ? 'Verified' : 'Unverified' }}
                                 </span>
                             </td>
-                            <td class="py-5 text-sm text-[#4e4139] dark:text-white/75">
+                            <td class="py-5 pr-2 whitespace-nowrap text-sm text-[#4e4139] dark:text-white/75">
                                 {{ $user->created_at?->format('d M Y, H:i') ?? '-' }}
                             </td>
                             <td class="py-5">
@@ -208,8 +251,7 @@
                                     </a>
 
                                     <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?');">
-                                        @csrf
-                                        @method('DELETE')
+                                        @csrf @method('DELETE')
                                         <button
                                             type="submit"
                                             @click.prevent="openDelete({ id: {{ $user->id }}, name: @js($user->name) })"

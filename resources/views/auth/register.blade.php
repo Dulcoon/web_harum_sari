@@ -1,62 +1,145 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+@extends('layouts.auth-clean')
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+@section('title', 'Register | HOMELIVING')
+@section('body_class', 'bg-surface font-body text-on-surface selection:bg-primary-fixed min-h-screen')
+
+@section('content')
+<main class="min-h-screen flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/3 h-full bg-surface-container-low -z-10 translate-x-1/4"></div>
+    <div class="absolute bottom-10 left-10 w-64 h-64 border-outline-variant/10 border-[1px] rounded-full -z-10"></div>
+    <div class="absolute -top-20 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl -z-10"></div>
+
+    <div class="max-w-6xl w-full flex flex-col md:flex-row bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(27,28,27,0.08)]">
+        <div class="hidden md:block md:w-1/2 relative group min-h-[600px]">
+            <img alt="Modern Minimalist Interior" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3000ms] ease-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc_nEHMNRuUf4m7Gctua_b2yfnmQvrDVzvAUGOOKkp6JXpAn-_nP7-YTLccfPeb3dbOvMDe8q6TNmNNsoiCvksQtXpkVOup1LAiNfTAxPtaDvhSBOAAhoyNsVxMOkLH6bFf68AGsUGydDC50zOwooBax5aBdE8-JuUmMOSSyRRP7lsakmGMTeB1BK5vjITSFBlseoagdJYTLpXcMzWlQ5Q_0UXiZyoectNNGwaare4NJhIE605aNJptjh-rzlUDBTOKzj1myVbTGEQ"/>
+            <div class="absolute inset-0 bg-stone-900/10 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+            <div class="absolute bottom-12 left-12 right-12 z-10">
+                <p class="font-headline text-5xl text-white leading-[1.1] tracking-tight font-medium">Design <br/>Your <br/>Sanctuary.</p>
+            </div>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center bg-surface-container-lowest">
+            <div class="max-w-md mx-auto w-full">
+                <header class="mb-10">
+                    <div class="text-xl font-bold tracking-tighter text-stone-900 mb-8 uppercase">HOMELIVING</div>
+                    <h1 class="font-headline text-3xl font-semibold text-on-surface mb-2 tracking-tight">Join the Atelier</h1>
+                    <p class="text-secondary font-body text-sm leading-relaxed">Create your account and start exploring our curated collection.</p>
+                </header>
+
+                <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                @if ($errors->any())
+                    <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form method="POST" action="{{ route('register') }}" class="space-y-5">
+                    @csrf
+
+                    <div class="space-y-2">
+                        <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium" for="name">Full Name</label>
+                        <div class="relative group">
+                            <input class="w-full px-4 py-4 bg-surface-container rounded-lg border-none focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-300 outline-none text-on-surface placeholder:text-stone-400"
+                                   id="name"
+                                   name="name"
+                                   value="{{ old('name') }}"
+                                   placeholder="John Doe"
+                                   type="text"
+                                   required
+                                   autofocus
+                                   autocomplete="name"/>
+                        </div>
+                        <x-input-error :messages="$errors->get('name')" class="mt-1" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium" for="email">Email Address</label>
+                        <div class="relative group">
+                            <input class="w-full px-4 py-4 bg-surface-container rounded-lg border-none focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-300 outline-none text-on-surface placeholder:text-stone-400"
+                                   id="email"
+                                   name="email"
+                                   value="{{ old('email') }}"
+                                   placeholder="atelier@homeliving.com"
+                                   type="email"
+                                   required
+                                   autocomplete="username"/>
+                        </div>
+                        <x-input-error :messages="$errors->get('email')" class="mt-1" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium" for="phone">Phone Number</label>
+                        <div class="relative group">
+                            <input class="w-full px-4 py-4 bg-surface-container rounded-lg border-none focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-300 outline-none text-on-surface placeholder:text-stone-400"
+                                   id="phone"
+                                   name="phone"
+                                   value="{{ old('phone') }}"
+                                   placeholder="+62 812-3456-7890"
+                                   type="tel"/>
+                        </div>
+                        <x-input-error :messages="$errors->get('phone')" class="mt-1" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium" for="password">Password</label>
+                        <div class="relative group">
+                            <input class="w-full px-4 py-4 bg-surface-container rounded-lg border-none focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-300 outline-none text-on-surface placeholder:text-stone-400"
+                                   id="password"
+                                   name="password"
+                                   placeholder="Create a password"
+                                   type="password"
+                                   required
+                                   autocomplete="new-password"/>
+                        </div>
+                        <x-input-error :messages="$errors->get('password')" class="mt-1" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="font-label text-xs uppercase tracking-widest text-on-surface-variant font-medium" for="password_confirmation">Confirm Password</label>
+                        <div class="relative group">
+                            <input class="w-full px-4 py-4 bg-surface-container rounded-lg border-none focus:ring-1 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all duration-300 outline-none text-on-surface placeholder:text-stone-400"
+                                   id="password_confirmation"
+                                   name="password_confirmation"
+                                   placeholder="Repeat password"
+                                   type="password"
+                                   required
+                                   autocomplete="new-password"/>
+                        </div>
+                        <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
+                    </div>
+
+                    <div class="pt-2">
+                        <button class="w-full bg-[#d46211] hover:bg-[#994200] text-white font-headline font-semibold py-4 rounded-lg shadow-[0_10px_20px_-5px_rgba(212,98,17,0.3)] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
+                            Create Account
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-outline-variant/20"></div>
+                    </div>
+                    <div class="relative flex justify-center text-xs uppercase tracking-[0.2em] font-label">
+                        <span class="bg-surface-container-lowest px-4 text-stone-400">or join the atelier</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <a href="{{ route('socialite.redirect', 'google') }}" class="flex items-center justify-center gap-3 py-3 px-4 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface font-body text-sm font-medium">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+                        Google
+                    </a>
+                </div>
+
+                <p class="mt-12 text-center text-sm font-body text-secondary">
+                    Already have an account?
+                    <a class="text-primary font-semibold hover:underline underline-offset-4 decoration-primary/30 transition-all" href="{{ route('login') }}">Sign In</a>
+                </p>
+            </div>
         </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex mt-4 justify-between">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-            </label>
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already Have An Account?') }}
-                </a>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    </div>
+</main>
+@endsection

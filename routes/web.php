@@ -9,11 +9,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\sendEmailController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\EnsureUserIsCustomer;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CartApiController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\SettingsController;
 
 use App\Http\Controllers\TransactionApiController;
 use App\Http\Controllers\MidtransController;
@@ -50,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
 
 
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+
     Route::get('category', [CategoryController::class, 'index'])->name('category.index');
     Route::get('category/create', [CategoryController::class, 'create'])->name('category.create');
     Route::post('category', [CategoryController::class, 'store'])->name('category.store');
@@ -67,26 +72,29 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
 
 
 
 
 
 
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout/createMidtransToken', [CheckoutController::class, 'createMidtransToken'])->name('checkout.createMidtransToken');
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
-    Route::get('/checkout/pending', [CheckoutController::class, 'pending'])->name('checkout.pending');
+
+    // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    // Route::post('/checkout/createMidtransToken', [CheckoutController::class, 'createMidtransToken'])->name('checkout.createMidtransToken');
+    // Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    // Route::get('/checkout/pending', [CheckoutController::class, 'pending'])->name('checkout.pending');
 
 
-    Route::post('/checkout/createSnapToken', [CheckoutController::class, 'createSnapToken'])->name('checkout.createSnapToken');
+    // Route::post('/checkout/createSnapToken', [CheckoutController::class, 'createSnapToken'])->name('checkout.createSnapToken');
 
 
 
-    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    // Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    // Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    // Route::delete('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    // Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 
 
 });
@@ -103,13 +111,14 @@ Route::get('/', [HomeController::class, 'showHomePage'])->name('homepage.home');
 Route::get('/product/{id}', [HomeController::class, 'showProductDetail'])->name('product.detail');
 Route::get('/products/search-suggestions', [HomeController::class, 'searchSuggestions'])->name('products.search.suggestions');
 
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 
 
 // buat api
 Route::prefix('api')->group(function () {
     Route::middleware(['throttle:api'])->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
-        Route::post('/register', [AuthController::class, 'register']);
         Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
     });
 
@@ -134,11 +143,11 @@ Route::get('/api/products', [ProductApiController::class, 'index']);
 Route::get('/api/products/{id}', [ProductApiController::class, 'show']);
 
 
-Route::post('/api/cart/add', [CartApiController::class, 'add'])->name('cart.add');
-Route::middleware('auth:sanctum')->get('/api/cart', [CartApiController::class, 'index'])->name('cart.index');
+// Route::post('/api/cart/add', [CartApiController::class, 'add'])->name('cart.add');
+// Route::middleware('auth:sanctum')->get('/api/cart', [CartApiController::class, 'index'])->name('cart.index');
 
-Route::delete('/api/cart/remove', [CartApiController::class, 'remove'])->name('cart.remove');
-Route::put('/api/cart/update', [CartApiController::class, 'update'])->name('cart.update');
+// Route::delete('/api/cart/remove', [CartApiController::class, 'remove'])->name('cart.remove');
+// Route::put('/api/cart/update', [CartApiController::class, 'update'])->name('cart.update');
 
 
 Route::get('/success', [MidtransController::class, 'success'])->name('success');

@@ -20,9 +20,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
+        'phone',
         'role',
         'password',
+        'google_id',
+        'avatar',
         'email_verified_at',
     ];
 
@@ -52,5 +56,46 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoriteProducts()
+    {
+        return $this->belongsToMany(Product::class, 'favorites')->withTimestamps();
+    }
+
+    public function otps()
+    {
+        return $this->hasMany(UserOtp::class);
+    }
+
+    public function hasSocialAccount(string $provider): bool
+    {
+        $field = $provider . '_id';
+        return !is_null($this->$field);
+    }
+
+    public function markEmailAsVerified(): void
+    {
+        if (is_null($this->email_verified_at)) {
+            $this->forceFill(['email_verified_at' => now()])->save();
+        }
+    }
+
+    public function generateAvatarUrl(): string
+    {
+        if ($this->avatar) {
+            if (str_starts_with($this->avatar, 'http')) {
+                return $this->avatar;
+            }
+
+            return asset('storage/' . $this->avatar);
+        }
+
+        return 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($this->email ?? 'guest@homeliving.com'))) . '?d=identicon&s=300';
     }
 }
