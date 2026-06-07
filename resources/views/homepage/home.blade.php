@@ -100,7 +100,7 @@
 
                         <span class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">Sale</span>
 
-                        <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="absolute top-3 right-3">
+                        <form method="POST" action="{{ route('wishlist.toggle', $product->slug ?? $product->id) }}" class="absolute top-3 right-3">
                             @csrf
                             <button type="submit" onclick="event.stopPropagation()"
                                 class="w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/50 hover:text-primary' }}">

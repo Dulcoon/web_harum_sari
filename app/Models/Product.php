@@ -27,6 +27,11 @@ class Product extends Model
         return 'slug';
     }
 
+    public function getRouteKey(): string
+    {
+        return $this->slug ?? (string) $this->id;
+    }
+
     public function transactions()
     {
         return $this->hasMany(Transaction::class);

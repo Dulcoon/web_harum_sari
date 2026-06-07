@@ -318,7 +318,7 @@
                                         class="absolute top-3 left-3 bg-premium-gradient text-white text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-primary/40">New</span>
                                 @endif
 
-                                <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="absolute top-3 right-3">
+                                <form method="POST" action="{{ route('wishlist.toggle', $product->slug ?? $product->id) }}" class="absolute top-3 right-3">
                                     @csrf
                                     <button type="submit"
                                         onclick="event.stopPropagation()"

@@ -20,11 +20,13 @@ class WishlistController extends Controller
         return view('wishlist.index', compact('favorites'));
     }
 
-    public function toggle(Request $request, Product $product): RedirectResponse
+    public function toggle(Request $request, string $product): RedirectResponse
     {
         if (!auth()->check()) {
             return redirect()->route('login');
         }
+
+        $product = Product::where('slug', $product)->orWhere('id', $product)->firstOrFail();
 
         $user = auth()->user();
         $favorite = Favorite::where('user_id', $user->id)
