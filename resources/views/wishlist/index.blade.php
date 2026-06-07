@@ -29,7 +29,7 @@
     <div class="max-w-7xl mx-auto">
         @forelse($favorites as $product)
             <div class="group relative flex items-center gap-5 p-5 mb-4 rounded-2xl glass-morphism transition-all duration-300 hover:border-primary/30 cursor-pointer"
-                 onclick="window.location='{{ route('product.detail', $product) }}'">
+                 onclick="window.location='{{ route('product.detail', $product->slug ?? $product->id) }}'">
 
                 {{-- Image --}}
                 <div class="w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-xl overflow-hidden bg-white/10">

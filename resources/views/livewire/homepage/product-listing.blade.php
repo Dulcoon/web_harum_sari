@@ -305,7 +305,7 @@
                             $isFavorited = in_array($product->id, $favoriteProductIds);
                         @endphp
                         <article
-                            onclick="window.location='{{ route('product.detail', $product) }}'"
+                            onclick="window.location='{{ route('product.detail', $product->slug ?? $product->id) }}'"
                             class="product-glass-card rounded-3xl p-4 shadow-sm group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                             <div
                                 class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">

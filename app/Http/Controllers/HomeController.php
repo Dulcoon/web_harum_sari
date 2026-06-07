@@ -29,8 +29,10 @@ class HomeController extends Controller
         return view('homepage.product');
     }
 
-    public function showProductDetail(Product $product)
+    public function showProductDetail(string $product)
     {
+        $product = Product::where('slug', $product)->orWhere('id', $product)->with('kategori')->firstOrFail();
+
         $isFavorited = auth()->check()
             && auth()->user()->favoriteProducts()->where('product_id', $product->id)->exists();
 

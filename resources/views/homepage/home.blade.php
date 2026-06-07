@@ -92,7 +92,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-8">
             @foreach($featuredProducts as $product)
                 @php $isFavorited = in_array($product->id, $favoriteProductIds ?? []); @endphp
-                <article onclick="window.location='{{ route('product.detail', $product) }}'"
+                <article onclick="window.location='{{ route('product.detail', $product->slug ?? $product->id) }}'"
                     class="product-glass-card rounded-3xl p-4 group transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                     <div class="product-media-shell relative aspect-square rounded-2xl overflow-hidden mb-4 md:mb-5">
                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('assets/no_image.webp') }}" alt="{{ $product->nama }}"

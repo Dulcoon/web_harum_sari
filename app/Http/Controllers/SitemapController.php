@@ -28,7 +28,7 @@ class SitemapController extends Controller
 
         foreach ($products as $product) {
             $urls[] = [
-                'loc' => route('product.detail', $product),
+                'loc' => route('product.detail', $product->slug ?? $product->id),
                 'priority' => '0.8',
                 'changefreq' => 'weekly',
                 'lastmod' => $product->updated_at->toW3cString(),
