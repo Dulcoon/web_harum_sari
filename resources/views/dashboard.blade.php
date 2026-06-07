@@ -46,28 +46,30 @@
         <article class="col-span-12 rounded-3xl border border-[#eadfd4] bg-white/70 p-7 shadow-sm dark:border-white/10 dark:bg-white/5 lg:col-span-8">
             <div class="mb-6 flex items-center justify-between gap-3">
                 <div>
-                    <h3 class="text-3xl font-bold tracking-tight">Sales Statistics</h3>
-                    <p class="text-sm text-[#6e5a50] dark:text-[#b89983]">Weekly performance tracking</p>
-                </div>
-                <div class="rounded-xl border border-[#eadfd4] bg-white/80 p-1 dark:border-white/10 dark:bg-white/5">
-                    <button type="button" class="rounded-lg bg-white px-4 py-1.5 text-xs font-bold text-primary shadow-sm dark:bg-primary/15 dark:text-primary">Weekly</button>
-                    <button type="button" class="rounded-lg px-4 py-1.5 text-xs font-bold text-[#6e5a50] dark:text-white/70">Monthly</button>
+                    <h3 class="text-3xl font-bold tracking-tight">Catalog Overview</h3>
+                    <p class="text-sm text-[#6e5a50] dark:text-[#b89983]">Products by category breakdown</p>
                 </div>
             </div>
 
             <div class="relative h-[320px] overflow-hidden rounded-2xl border border-[#eadfd4] bg-white/60 p-6 dark:border-white/10 dark:bg-white/10">
-                <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 h-full w-full opacity-80">
-                    <polyline points="{{ $salesChart['linePoints'] }}" fill="none" stroke="#d46211" stroke-opacity="0.55" stroke-width="1.8" />
-                </svg>
+                @if(count($catalogChart['bars']) > 0)
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 h-full w-full opacity-80">
+                        <polyline points="{{ $catalogChart['linePoints'] }}" fill="none" stroke="#d46211" stroke-opacity="0.55" stroke-width="1.8" />
+                    </svg>
 
-                <div class="relative z-10 flex h-full items-end justify-between gap-4">
-                    @foreach($salesChart['bars'] as $bar)
-                        <div class="flex flex-1 flex-col items-center justify-end gap-3">
-                            <div class="w-full max-w-[44px] rounded-t-xl {{ $bar['active'] ? 'bg-gradient-to-t from-primary to-orange-300 shadow-lg shadow-primary/25' : 'bg-gradient-to-t from-primary/25 to-primary/45' }}" style="height: {{ $bar['height'] }}px"></div>
-                            <span class="text-[10px] font-extrabold uppercase tracking-[0.16em] {{ $bar['active'] ? 'text-primary' : 'text-[#6e5a50] dark:text-[#b89983]' }}">{{ $bar['label'] }}</span>
-                        </div>
-                    @endforeach
-                </div>
+                    <div class="relative z-10 flex h-full items-end justify-between gap-4">
+                        @foreach($catalogChart['bars'] as $bar)
+                            <div class="flex flex-1 flex-col items-center justify-end gap-3">
+                                <div class="w-full max-w-[44px] rounded-t-xl {{ $bar['active'] ? 'bg-gradient-to-t from-primary to-orange-300 shadow-lg shadow-primary/25' : 'bg-gradient-to-t from-primary/25 to-primary/45' }}" style="height: {{ $bar['height'] }}px"></div>
+                                <span class="text-[10px] font-extrabold uppercase tracking-[0.16em] {{ $bar['active'] ? 'text-primary' : 'text-[#6e5a50] dark:text-[#b89983]' }}">{{ $bar['label'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="flex h-full items-center justify-center">
+                        <p class="text-sm text-[#6e5a50] dark:text-[#b89983]">No categories yet. Add products to see the breakdown.</p>
+                    </div>
+                @endif
             </div>
         </article>
 
@@ -79,7 +81,7 @@
                         <img src="{{ $category['thumbnail'] }}" alt="{{ $category['name'] }}" class="h-14 w-14 rounded-xl border border-[#eadfd4] object-cover dark:border-white/10" />
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-bold">{{ $category['name'] }}</p>
-                            <p class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $category['share'] }}% of total sales</p>
+                            <p class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $category['share'] }}% of catalog</p>
                         </div>
                         <span class="material-symbols-outlined text-primary opacity-0 transition-opacity group-hover:opacity-100">chevron_right</span>
                     </div>
@@ -91,34 +93,28 @@
 
         <article class="col-span-12 rounded-3xl border border-[#eadfd4] bg-white/70 p-5 shadow-sm dark:border-white/10 dark:bg-white/5 sm:p-7 lg:col-span-9">
             <div class="mb-6 flex items-center justify-between gap-4">
-                <h3 class="text-2xl font-bold tracking-tight sm:text-3xl">Recent Orders</h3>
-                <a href="#" class="text-xs font-bold uppercase tracking-[0.18em] text-primary">View All Orders</a>
+                <h3 class="text-2xl font-bold tracking-tight sm:text-3xl">Low Stock Products</h3>
+                <a href="{{ route('products.index') }}" class="text-xs font-bold uppercase tracking-[0.18em] text-primary">Manage Products</a>
             </div>
 
             {{-- Mobile: card list --}}
             <div class="divide-y divide-[#efe6dd] dark:divide-white/10 sm:hidden">
-                @forelse($recentOrders as $order)
-                    @php
-                        $status = strtolower((string) $order['status']);
-                        $statusClass = match ($status) {
-                            'paid', 'completed', 'shipped' => 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
-                            'cancelled' => 'bg-gray-500/15 text-gray-500 border border-gray-500/20',
-                            default => 'bg-primary/15 text-primary border border-primary/20',
-                        };
-                    @endphp
+                @forelse($lowStockProducts as $product)
                     <div class="flex items-center justify-between gap-3 py-4">
-                        <div class="min-w-0 flex-1">
-                            <p class="text-sm font-bold">{{ $order['order_number'] }}</p>
-                            <p class="mt-0.5 truncate text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $order['customer_name'] }} &middot; {{ $order['product_name'] }}</p>
-                            <div class="mt-2 flex items-center gap-2">
-                                <span class="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider {{ $statusClass }}">{{ str_replace('_', ' ', $order['status']) }}</span>
-                                <span class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $order['date'] }}</span>
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <img src="{{ $product['foto'] }}" alt="{{ $product['nama'] }}" class="h-12 w-12 shrink-0 rounded-xl border border-[#eadfd4] object-cover dark:border-white/10">
+                            <div class="min-w-0">
+                                <p class="text-sm font-bold truncate">{{ $product['nama'] }}</p>
+                                <p class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $product['kategori'] }}</p>
                             </div>
                         </div>
-                        <span class="shrink-0 text-sm font-bold">Rp {{ number_format($order['amount'], 0, ',', '.') }}</span>
+                        <div class="text-right shrink-0">
+                            <span class="text-sm font-bold {{ $product['stok'] == 0 ? 'text-red-600' : 'text-amber-600' }}">{{ $product['stok'] }} left</span>
+                            <span class="block text-[10px] uppercase tracking-wider text-[#6e5a50] dark:text-[#b89983]">{{ $product['status'] }}</span>
+                        </div>
                     </div>
                 @empty
-                    <p class="py-8 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">No order data available yet.</p>
+                    <p class="py-8 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">All products are well-stocked.</p>
                 @endforelse
             </div>
 
@@ -127,42 +123,37 @@
                 <table class="w-full">
                     <thead>
                         <tr class="border-b border-[#eadfd4] text-left text-[10px] font-bold uppercase tracking-[0.18em] text-[#8b7266] dark:border-white/10 dark:text-[#9a6c4c]">
-                            <th class="pb-4">Order ID</th>
-                            <th class="pb-4">Customer</th>
                             <th class="pb-4">Product</th>
-                            <th class="pb-4">Date</th>
-                            <th class="pb-4">Status</th>
-                            <th class="pb-4 text-right">Amount</th>
+                            <th class="pb-4">Category</th>
+                            <th class="pb-4">Stock</th>
+                            <th class="pb-4 text-right">Status</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#efe6dd] dark:divide-white/10">
-                        @forelse($recentOrders as $order)
-                            @php
-                                $s = strtolower((string) $order['status']);
-                                $statusClass = match ($s) {
-                                    'paid', 'completed', 'shipped' => 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20',
-                                    'cancelled' => 'bg-gray-500/15 text-gray-500 border border-gray-500/20',
-                                    default => 'bg-primary/15 text-primary border border-primary/20',
-                                };
-                            @endphp
+                        @forelse($lowStockProducts as $product)
                             <tr class="hover:bg-white/30 dark:hover:bg-white/5">
-                                <td class="py-4 text-sm font-bold">{{ $order['order_number'] }}</td>
                                 <td class="py-4">
                                     <div class="flex items-center gap-3">
-                                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#eadfd4] bg-white/60 text-[10px] font-bold dark:border-white/10 dark:bg-white/5">{{ $order['customer_initials'] }}</span>
-                                        <span class="text-sm font-semibold">{{ $order['customer_name'] }}</span>
+                                        <img src="{{ $product['foto'] }}" alt="{{ $product['nama'] }}" class="h-10 w-10 shrink-0 rounded-lg border border-[#eadfd4] object-cover dark:border-white/10">
+                                        <span class="text-sm font-bold">{{ $product['nama'] }}</span>
                                     </div>
                                 </td>
-                                <td class="py-4 text-sm text-[#4e4139] dark:text-white/75">{{ $order['product_name'] }}</td>
-                                <td class="py-4 text-sm text-[#4e4139] dark:text-white/75">{{ $order['date'] }}</td>
+                                <td class="py-4 text-sm text-[#4e4139] dark:text-white/75">{{ $product['kategori'] }}</td>
                                 <td class="py-4">
-                                    <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider {{ $statusClass }}">{{ str_replace('_', ' ', $order['status']) }}</span>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold {{ $product['stok'] == 0 ? 'bg-red-500/15 text-red-600 dark:text-red-400' : 'bg-amber-500/15 text-amber-700 dark:text-amber-400' }}">
+                                        <span class="material-symbols-outlined text-[14px]">{{ $product['stok'] == 0 ? 'block' : 'inventory_2' }}</span>
+                                        {{ $product['stok'] == 0 ? 'Out of Stock' : $product['stok'] . ' left' }}
+                                    </span>
                                 </td>
-                                <td class="py-4 text-right text-sm font-bold">Rp {{ number_format($order['amount'], 0, ',', '.') }}</td>
+                                <td class="py-4 text-right">
+                                    <span class="rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider {{ $product['status'] == 'Active' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-400' : 'bg-gray-500/15 text-gray-600 dark:text-gray-400' }}">
+                                        {{ $product['status'] }}
+                                    </span>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="py-8 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">No order data available yet.</td>
+                                <td colspan="4" class="py-8 text-center text-sm text-[#6e5a50] dark:text-[#b89983]">All products are well-stocked.</td>
                             </tr>
                         @endforelse
                     </tbody>

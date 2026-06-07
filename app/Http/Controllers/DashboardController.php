@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
-use App\Models\Order;
 use App\Models\Product;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
@@ -23,265 +19,194 @@ class DashboardController extends Controller
         }
 
         $hasUsers = Schema::hasTable('users');
-        $hasOrders = Schema::hasTable('orders');
-        $hasTransactions = Schema::hasTable('transactions');
         $hasProducts = Schema::hasTable('products');
         $hasCategories = Schema::hasTable('kategoris');
-        $hasOrderItems = Schema::hasTable('order_items');
         $hasUserRole = $hasUsers && Schema::hasColumn('users', 'role');
+        $hasWishlists = Schema::hasTable('wishlists');
 
         $now = now();
         $monthStart = $now->copy()->startOfMonth();
         $previousMonthStart = $now->copy()->subMonthNoOverflow()->startOfMonth();
         $previousMonthEnd = $now->copy()->subMonthNoOverflow()->endOfMonth();
 
-        $paidOrderStatuses = ['paid', 'shipped', 'completed'];
+        // ── Summary Cards ──
 
-        $totalSales = 0.0;
-        $salesCurrentMonth = 0.0;
-        $salesPreviousMonth = 0.0;
+        $totalProducts = $hasProducts ? (int) Product::count() : 0;
+        $productsThisMonth = $hasProducts ? (int) Product::whereBetween('created_at', [$monthStart, $now])->count() : 0;
+        $productsLastMonth = $hasProducts ? (int) Product::whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count() : 0;
 
-        if ($hasOrders) {
-            $salesQuery = Order::query()->whereIn('status', $paidOrderStatuses);
-            $totalSales = (float) $salesQuery->sum('total_amount');
-            $salesCurrentMonth = (float) (clone $salesQuery)->whereBetween('created_at', [$monthStart, $now])->sum('total_amount');
-            $salesPreviousMonth = (float) (clone $salesQuery)->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->sum('total_amount');
-        } elseif ($hasTransactions) {
-            $salesQuery = Transaction::query()->where('payment_status', 'completed');
-            $totalSales = (float) $salesQuery->sum('gross_amount');
-            $salesCurrentMonth = (float) (clone $salesQuery)->whereBetween('created_at', [$monthStart, $now])->sum('gross_amount');
-            $salesPreviousMonth = (float) (clone $salesQuery)->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->sum('gross_amount');
+        $totalCustomers = 0;
+        $customersThisMonth = 0;
+        $customersLastMonth = 0;
+        if ($hasUsers && $hasUserRole) {
+            $totalCustomers = (int) User::where('role', 'customer')->count();
+            $customersThisMonth = (int) User::where('role', 'customer')->whereBetween('created_at', [$monthStart, $now])->count();
+            $customersLastMonth = (int) User::where('role', 'customer')->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count();
+        } elseif ($hasUsers) {
+            $totalCustomers = (int) User::count();
+            $customersThisMonth = (int) User::whereBetween('created_at', [$monthStart, $now])->count();
+            $customersLastMonth = (int) User::whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count();
         }
 
-        $visitorsQuery = User::query();
-        if ($hasUserRole) {
-            $visitorsQuery->where('role', 'customer');
-        }
-        $totalVisitors = $hasUsers ? (int) (clone $visitorsQuery)->count() : 0;
-        $visitorsCurrentMonth = $hasUsers ? (int) (clone $visitorsQuery)->whereBetween('created_at', [$monthStart, $now])->count() : 0;
-        $visitorsPreviousMonth = $hasUsers ? (int) (clone $visitorsQuery)->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count() : 0;
+        $activeProducts = $hasProducts ? (int) Product::where('featured_products', true)->count() : 0;
+        $activeThisMonth = $hasProducts ? (int) Product::where('featured_products', true)->whereBetween('created_at', [$monthStart, $now])->count() : 0;
+        $activeLastMonth = $hasProducts ? (int) Product::where('featured_products', true)->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count() : 0;
 
-        $totalOrders = $hasOrders ? (int) Order::query()->count() : 0;
-        $ordersCurrentMonth = $hasOrders ? (int) Order::query()->whereBetween('created_at', [$monthStart, $now])->count() : 0;
-        $ordersPreviousMonth = $hasOrders ? (int) Order::query()->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count() : 0;
-
-        $activeCustomers = 0;
-        $activeCustomersCurrentMonth = 0;
-        $activeCustomersPreviousMonth = 0;
-        if ($hasOrders) {
-            $activeCustomers = (int) Order::query()->distinct('user_id')->count('user_id');
-            $activeCustomersCurrentMonth = (int) Order::query()
-                ->whereBetween('created_at', [$monthStart, $now])
-                ->distinct('user_id')
-                ->count('user_id');
-            $activeCustomersPreviousMonth = (int) Order::query()
-                ->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])
-                ->distinct('user_id')
-                ->count('user_id');
-        } elseif ($hasTransactions) {
-            $activeCustomers = (int) Transaction::query()->distinct('user_id')->count('user_id');
-            $activeCustomersCurrentMonth = (int) Transaction::query()
-                ->whereBetween('created_at', [$monthStart, $now])
-                ->distinct('user_id')
-                ->count('user_id');
-            $activeCustomersPreviousMonth = (int) Transaction::query()
-                ->whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])
-                ->distinct('user_id')
-                ->count('user_id');
-        }
+        $totalCategories = $hasCategories ? (int) Kategori::count() : 0;
+        $categoriesThisMonth = $hasCategories ? (int) Kategori::whereBetween('created_at', [$monthStart, $now])->count() : 0;
+        $categoriesLastMonth = $hasCategories ? (int) Kategori::whereBetween('created_at', [$previousMonthStart, $previousMonthEnd])->count() : 0;
 
         $summaryCards = [
             [
-                'label' => 'Total Sales',
-                'value' => $this->currency($totalSales),
-                'trend' => $this->growthRate($salesCurrentMonth, $salesPreviousMonth),
-                'icon' => 'payments',
-            ],
-            [
-                'label' => 'Website Visitors',
-                'value' => number_format($totalVisitors),
-                'trend' => $this->growthRate($visitorsCurrentMonth, $visitorsPreviousMonth),
-                'icon' => 'visibility',
-            ],
-            [
-                'label' => 'Total Orders',
-                'value' => number_format($totalOrders),
-                'trend' => $this->growthRate($ordersCurrentMonth, $ordersPreviousMonth),
+                'label' => 'Total Products',
+                'value' => number_format($totalProducts),
+                'trend' => $this->growthRate($productsThisMonth, $productsLastMonth),
                 'icon' => 'inventory_2',
             ],
             [
-                'label' => 'Active Customers',
-                'value' => number_format($activeCustomers),
-                'trend' => $this->growthRate($activeCustomersCurrentMonth, $activeCustomersPreviousMonth),
-                'icon' => 'person_add',
+                'label' => 'Total Customers',
+                'value' => number_format($totalCustomers),
+                'trend' => $this->growthRate($customersThisMonth, $customersLastMonth),
+                'icon' => 'person',
+            ],
+            [
+                'label' => 'Active Products',
+                'value' => number_format($activeProducts),
+                'trend' => $this->growthRate($activeThisMonth, $activeLastMonth),
+                'icon' => 'check_circle',
+            ],
+            [
+                'label' => 'Categories',
+                'value' => number_format($totalCategories),
+                'trend' => $this->growthRate($categoriesThisMonth, $categoriesLastMonth),
+                'icon' => 'category',
             ],
         ];
 
-        $chartDays = collect(range(6, 0))->map(function (int $offset): Carbon {
-            return now()->subDays($offset)->startOfDay();
-        });
-        $chartLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        // ── Chart: Products per Category ──
 
-        $weeklyTotalsRaw = [];
-        if ($hasOrders) {
-            $weeklyTotalsRaw = Order::query()
-                ->selectRaw('DATE(created_at) as day, SUM(total_amount) as total')
-                ->whereIn('status', $paidOrderStatuses)
-                ->whereBetween('created_at', [now()->subDays(6)->startOfDay(), now()->endOfDay()])
-                ->groupBy('day')
-                ->pluck('total', 'day')
-                ->toArray();
-        } elseif ($hasTransactions) {
-            $weeklyTotalsRaw = Transaction::query()
-                ->selectRaw('DATE(created_at) as day, SUM(gross_amount) as total')
-                ->where('payment_status', 'completed')
-                ->whereBetween('created_at', [now()->subDays(6)->startOfDay(), now()->endOfDay()])
-                ->groupBy('day')
-                ->pluck('total', 'day')
-                ->toArray();
+        $chartLabels = [];
+        $chartValues = [];
+        $maxChartValue = 1;
+        $peakIndex = 0;
+
+        if ($hasCategories) {
+            $categories = Kategori::withCount('products')
+                ->orderByDesc('products_count')
+                ->get();
+
+            foreach ($categories as $cat) {
+                $chartLabels[] = $cat->nama;
+                $chartValues[] = (int) $cat->products_count;
+            }
+
+            $maxChartValue = max(1, ! empty($chartValues) ? max($chartValues) : 1);
+            $peakIndex = ! empty($chartValues) ? array_search(max($chartValues), $chartValues) : 0;
         }
 
         $chartBars = [];
-        foreach ($chartDays as $index => $day) {
-            $key = $day->toDateString();
-            $total = (float) ($weeklyTotalsRaw[$key] ?? 0);
+        foreach ($chartLabels as $index => $label) {
+            $total = (int) ($chartValues[$index] ?? 0);
+            $ratio = $maxChartValue > 0 ? ($total / $maxChartValue) : 0;
             $chartBars[] = [
-                'label' => $chartLabels[$index] ?? $day->format('D'),
+                'label' => $label,
                 'total' => $total,
+                'height' => 36 + (int) round($ratio * 170),
+                'active' => $index === $peakIndex,
             ];
         }
 
-        $maxChartValue = max(1, (float) collect($chartBars)->max('total'));
-        $peakIndex = (int) collect($chartBars)->search(collect($chartBars)->sortByDesc('total')->first());
-
         $linePoints = [];
-        foreach ($chartBars as $index => &$bar) {
-            $ratio = $maxChartValue > 0 ? ($bar['total'] / $maxChartValue) : 0;
-            $bar['height'] = 36 + (int) round($ratio * 170);
-            $bar['active'] = $index === $peakIndex;
-
+        foreach ($chartBars as $index => $bar) {
             $x = count($chartBars) > 1 ? ($index / (count($chartBars) - 1)) * 100 : 50;
-            $y = 92 - ($ratio * 74);
-            $linePoints[] = round($x, 2).','.round($y, 2);
+            $y = 92 - ((($bar['total'] ?? 0) / $maxChartValue) * 74);
+            $linePoints[] = round($x, 2) . ',' . round($y, 2);
         }
-        unset($bar);
+
+        // ── Top Categories (by product count) ──
 
         $topCategories = collect();
-        if ($hasOrderItems && $hasProducts && $hasCategories) {
-            $topCategories = DB::table('order_items')
-                ->join('products', 'order_items.product_id', '=', 'products.id')
-                ->join('kategoris', 'products.kategori_id', '=', 'kategoris.id')
-                ->select(
-                    'kategoris.id',
-                    'kategoris.nama',
-                    'kategoris.thumbnail',
-                    DB::raw('SUM(order_items.quantity) as qty')
-                )
-                ->groupBy('kategoris.id', 'kategoris.nama', 'kategoris.thumbnail')
-                ->orderByDesc('qty')
-                ->limit(3)
-                ->get();
-        }
-
-        if ($topCategories->isEmpty() && $hasCategories) {
-            $topCategories = Kategori::query()
-                ->withCount('products')
+        if ($hasCategories) {
+            $topCategories = Kategori::withCount('products')
                 ->orderByDesc('products_count')
                 ->limit(3)
                 ->get()
                 ->map(function ($item) {
-                    return (object) [
-                        'id' => $item->id,
-                        'nama' => $item->nama,
-                        'thumbnail' => $item->thumbnail,
-                        'qty' => $item->products_count,
-                    ];
-                });
-        }
-
-        $totalTopQty = max(1, (int) collect($topCategories)->sum('qty'));
-        $topCategories = collect($topCategories)->map(function ($item) use ($totalTopQty) {
-            $name = (string) ($item->nama ?? 'Category');
-            $thumbnail = $item->thumbnail ? asset('storage/'.$item->thumbnail) : asset('assets/no_image.webp');
-            $qty = (int) ($item->qty ?? 0);
-            $share = (int) round(($qty / $totalTopQty) * 100);
-
-            return [
-                'name' => $name,
-                'thumbnail' => $thumbnail,
-                'share' => $share,
-            ];
-        })->values();
-
-        $recentOrders = collect();
-        if ($hasOrders) {
-            $recentOrders = Order::query()
-                ->with(['orderItems.product', 'user'])
-                ->latest()
-                ->limit(5)
-                ->get()
-                ->map(function (Order $order) {
-                    $customerName = $order->user->name ?? 'Guest Customer';
-                    $parts = preg_split('/\s+/', trim($customerName)) ?: [];
-                    $initials = strtoupper(substr((string) ($parts[0] ?? 'G'), 0, 1).substr((string) ($parts[1] ?? 'C'), 0, 1));
-                    $firstItem = $order->orderItems->first();
+                    $thumbnail = $item->thumbnail
+                        ? asset('storage/' . $item->thumbnail)
+                        : asset('assets/no_image.webp');
 
                     return [
-                        'order_number' => $order->order_number ?: '#HL-'.str_pad((string) $order->id, 4, '0', STR_PAD_LEFT),
-                        'customer_name' => $customerName,
-                        'customer_initials' => $initials,
-                        'product_name' => $firstItem?->product?->nama ?? 'Mixed Items',
-                        'date' => $order->created_at?->format('M d, Y') ?? '-',
-                        'status' => $order->status ?? 'pending',
-                        'amount' => (float) $order->total_amount,
+                        'name' => $item->nama,
+                        'thumbnail' => $thumbnail,
+                        'share' => (int) $item->products_count,
                     ];
                 });
         }
 
-        $activities = collect();
-        if ($hasUsers) {
-            $latestUser = User::query()->latest()->first();
-            if ($latestUser) {
-                $activities->push([
-                    'type' => 'primary',
-                    'title' => 'New customer registered',
-                    'description' => $latestUser->name.' joined the platform.',
-                    'time' => $latestUser->created_at?->diffForHumans() ?? 'recently',
-                ]);
-            }
-        }
-        if ($hasOrders) {
-            $latestOrder = Order::query()->latest()->first();
-            if ($latestOrder) {
-                $activities->push([
-                    'type' => 'muted',
-                    'title' => 'New order '.$latestOrder->order_number,
-                    'description' => 'Order status is '.strtoupper((string) $latestOrder->status).'.',
-                    'time' => $latestOrder->created_at?->diffForHumans() ?? 'recently',
-                ]);
-            }
-        }
+        $totalTopQty = max(1, (int) $topCategories->sum('share'));
+        $topCategories = $topCategories->map(function ($item) use ($totalTopQty) {
+            $item['share'] = (int) round(($item['share'] / $totalTopQty) * 100);
+            return $item;
+        })->values();
+
+        // ── Low Stock Products ──
+
+        $lowStockProducts = collect();
         if ($hasProducts) {
-            $lowStockProduct = Product::query()->where('stok', '<=', 5)->orderBy('stok')->first();
-            if ($lowStockProduct) {
-                $activities->push([
-                    'type' => 'warning',
-                    'title' => 'Inventory alert: '.$lowStockProduct->nama,
-                    'description' => 'Stock level is '.$lowStockProduct->stok.' item(s).',
-                    'time' => $lowStockProduct->updated_at?->diffForHumans() ?? 'recently',
-                ]);
-            }
+            $lowStockProducts = Product::with('kategori')
+                ->where('stok', '<=', 5)
+                ->orderBy('stok')
+                ->limit(10)
+                ->get()
+                ->map(function (Product $product) {
+                    return [
+                        'id' => $product->id,
+                        'nama' => $product->nama,
+                        'kategori' => $product->kategori?->nama ?? 'Uncategorized',
+                        'stok' => (int) $product->stok,
+                        'status' => $product->featured_products ? 'Active' : 'Draft',
+                        'foto' => $product->foto
+                            ? asset('storage/' . ltrim($product->foto, '/'))
+                            : asset('assets/no_image.webp'),
+                    ];
+                });
         }
-        if ($hasTransactions) {
-            $latestPaid = Transaction::query()->where('payment_status', 'completed')->latest()->first();
-            if ($latestPaid) {
-                $activities->push([
-                    'type' => 'success',
-                    'title' => 'Payout processed',
-                    'description' => 'Payment marked completed for order '.$latestPaid->order_id.'.',
-                    'time' => $latestPaid->updated_at?->diffForHumans() ?? 'recently',
-                ]);
-            }
+
+        // ── Recent Activity ──
+
+        $activities = collect();
+
+        $latestProduct = $hasProducts ? Product::latest()->first() : null;
+        if ($latestProduct) {
+            $activities->push([
+                'type' => 'primary',
+                'title' => 'New product added',
+                'description' => '"' . $latestProduct->nama . '" was added to catalog.',
+                'time' => $latestProduct->created_at?->diffForHumans() ?? 'recently',
+            ]);
+        }
+
+        $latestUser = $hasUsers ? User::latest()->first() : null;
+        if ($latestUser) {
+            $activities->push([
+                'type' => 'primary',
+                'title' => 'New customer registered',
+                'description' => $latestUser->name . ' joined the platform.',
+                'time' => $latestUser->created_at?->diffForHumans() ?? 'recently',
+            ]);
+        }
+
+        $lowStockAlert = $hasProducts
+            ? Product::where('stok', '<=', 5)->orderBy('stok')->first()
+            : null;
+        if ($lowStockAlert) {
+            $activities->push([
+                'type' => 'warning',
+                'title' => 'Inventory alert',
+                'description' => $lowStockAlert->nama . ' is running low (' . $lowStockAlert->stok . ' left).',
+                'time' => $lowStockAlert->updated_at?->diffForHumans() ?? 'recently',
+            ]);
         }
 
         if ($activities->isEmpty()) {
@@ -289,7 +214,7 @@ class DashboardController extends Controller
                 [
                     'type' => 'primary',
                     'title' => 'Dashboard ready',
-                    'description' => 'Start adding products and orders to see live activity.',
+                    'description' => 'Start adding products and categories to see live activity.',
                     'time' => 'just now',
                 ],
             ]);
@@ -297,12 +222,12 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'summaryCards' => $summaryCards,
-            'salesChart' => [
+            'catalogChart' => [
                 'bars' => $chartBars,
                 'linePoints' => implode(' ', $linePoints),
             ],
             'topCategories' => $topCategories,
-            'recentOrders' => $recentOrders,
+            'lowStockProducts' => $lowStockProducts,
             'activities' => $activities->take(5)->values(),
             'adminName' => $user->name,
         ]);
@@ -317,10 +242,5 @@ class DashboardController extends Controller
         }
 
         return (($current - $previous) / $previous) * 100;
-    }
-
-    private function currency(float $amount): string
-    {
-        return 'Rp '.number_format($amount, 0, ',', '.');
     }
 }
