@@ -127,7 +127,7 @@
                             <p
                                 class="text-[10px] uppercase tracking-[0.12em] font-black text-[#8a7568] dark:text-white/50 mb-1">
                                 Direct Line</p>
-                            <p class="font-bold text-lg text-[#1b1c1b] dark:text-white">6282135276867</p>
+                            <p class="font-bold text-lg text-[#1b1c1b] dark:text-white">6282135276868</p>
                         </div>
                     </div>
 
