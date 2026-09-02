@@ -35,7 +35,7 @@
 >
     <div class="flex items-start gap-3">
         <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl {{ $styles['iconClass'] }}">
-            <span class="material-symbols-outlined text-[18px]">{{ $styles['icon'] }}</span>
+            <x-icon :name="$styles['icon']" class="w-4 h-4" />
         </span>
 
         <div class="min-w-0">
@@ -49,7 +49,7 @@
         class="admin-flash-close absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-full text-[#8b7266] transition-colors hover:bg-black/5 hover:text-[#1b1c1b] dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white"
         aria-label="Dismiss notification"
     >
-        <span class="material-symbols-outlined text-[16px]">close</span>
+        <x-icon name="close" class="w-3.5 h-3.5" />
     </button>
 
     <div class="absolute inset-x-0 bottom-0 h-0.5 bg-black/5 dark:bg-white/10">

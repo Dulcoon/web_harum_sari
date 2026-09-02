@@ -21,13 +21,13 @@
                 class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-[#51423a] transition-colors hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5 lg:hidden"
                 aria-label="Toggle sidebar"
             >
-                <span class="material-symbols-outlined text-[22px]">menu</span>
+                <x-icon name="menu" class="w-5 h-5" />
             </button>
 
             @if ($searchAction)
                 <form method="GET" action="{{ $searchAction }}" class="hidden w-full max-w-md sm:block md:max-w-lg">
                     <div class="relative">
-                        <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[#8b7266] dark:text-[#9a6c4c]">search</span>
+                        <x-icon name="search" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b7266] dark:text-[#9a6c4c]" />
                         <input
                             name="{{ $searchName }}"
                             value="{{ $searchValue }}"
@@ -39,7 +39,7 @@
                 </form>
             @else
                 <div class="hidden sm:block relative w-full max-w-md md:max-w-lg">
-                    <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-[#8b7266] dark:text-[#9a6c4c]">search</span>
+                    <x-icon name="search" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b7266] dark:text-[#9a6c4c]" />
                     <input
                         type="text"
                         placeholder="{{ $placeholder }}"
@@ -52,17 +52,18 @@
         <div class="flex items-center gap-1 sm:gap-2">
             @if ($showThemeToggle)
                 <button type="button" id="theme-toggle-btn" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#51423a] transition-colors hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5 sm:h-10 sm:w-10">
-                    <span id="theme-toggle-icon" class="material-symbols-outlined text-[19px]">light_mode</span>
+                    <span class="dark:hidden inline-flex items-center justify-center"><x-icon name="dark_mode" class="w-5 h-5" /></span>
+                    <span class="hidden dark:inline-flex items-center justify-center"><x-icon name="light_mode" class="w-5 h-5" /></span>
                 </button>
             @endif
 
             <button type="button" class="relative hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#51423a] transition-colors hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5 sm:h-10 sm:w-10">
-                <span class="material-symbols-outlined text-[19px]">notifications</span>
+                <x-icon name="notifications" class="w-5 h-5" />
                 <span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary"></span>
             </button>
 
             <button type="button" class="hidden sm:inline-flex h-9 w-9 items-center justify-center rounded-lg text-[#51423a] transition-colors hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5 sm:h-10 sm:w-10">
-                <span class="material-symbols-outlined text-[19px]">mail</span>
+                <x-icon name="mail" class="w-5 h-5" />
             </button>
 
             <div
@@ -115,7 +116,7 @@
                             @click="profileOpen = false"
                             class="mt-1 flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#51423a] transition-colors hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5"
                         >
-                            <span class="material-symbols-outlined text-[18px]">settings</span>
+                            <x-icon name="settings" class="w-4 h-4" />
                             Settings
                         </a>
 
@@ -126,7 +127,7 @@
                                 type="submit"
                                 class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10"
                             >
-                                <span class="material-symbols-outlined text-[18px]">logout</span>
+                                <x-icon name="logout" class="w-4 h-4" />
                                 Logout
                             </button>
                         </form>
@@ -143,7 +144,6 @@
             const root = document.documentElement;
             const key = 'homeliving-admin-theme';
             const toggleBtn = document.getElementById('theme-toggle-btn');
-            const toggleIcon = document.getElementById('theme-toggle-icon');
 
             function applyTheme(theme) {
                 if (theme === 'light') {
@@ -152,10 +152,6 @@
                 } else {
                     root.classList.remove('light');
                     root.classList.add('dark');
-                }
-
-                if (toggleIcon) {
-                    toggleIcon.textContent = root.classList.contains('dark') ? 'light_mode' : 'dark_mode';
                 }
             }
 

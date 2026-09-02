@@ -26,7 +26,7 @@
         @if (session('pesan'))
             <div
                 class="glass-morphism rounded-2xl p-4 border border-emerald-400/30 text-emerald-700 dark:text-emerald-300 flex items-center gap-3">
-                <span class="material-symbols-outlined">check_circle</span>
+                <x-icon name="check_circle" class="w-5 h-5" />
                 <p>{{ session('pesan') }}</p>
             </div>
         @endif
@@ -109,7 +109,7 @@
                 <article class="glass-morphism rounded-3xl p-6 md:p-7">
                     <h3 class="text-[10px] uppercase tracking-[0.2em] font-black text-primary mb-4">The Showroom</h3>
                     <div class="flex items-start gap-4">
-                        <span class="material-symbols-outlined text-primary text-2xl">location_on</span>
+                        <x-icon name="location_on" class="w-6 h-6 text-primary shrink-0" />
                         <div>
                             <p class="font-bold text-xl text-[#1b1c1b] dark:text-white mb-2">Bali Headquarters</p>
                             <p class="text-sm text-[#6a5548] dark:text-white/65 leading-relaxed">Pura Masuka Street, South
@@ -122,7 +122,7 @@
                     <h3 class="text-[10px] uppercase tracking-[0.2em] font-black text-primary">Reach Out</h3>
 
                     <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined text-primary text-2xl">call</span>
+                        <x-icon name="call" class="w-6 h-6 text-primary shrink-0" />
                         <div>
                             <p
                                 class="text-[10px] uppercase tracking-[0.12em] font-black text-[#8a7568] dark:text-white/50 mb-1">
@@ -132,7 +132,7 @@
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined text-primary text-2xl">mail</span>
+                        <x-icon name="mail" class="w-6 h-6 text-primary shrink-0" />
                         <div>
                             <p
                                 class="text-[10px] uppercase tracking-[0.12em] font-black text-[#8a7568] dark:text-white/50 mb-1">
@@ -149,22 +149,22 @@
                         <a aria-label="Instagram"
                             class="w-11 h-11 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#8a7568] dark:text-white/50 transition-all hover:border-primary hover:text-primary hover:scale-105"
                             href="#">
-                            <span class="material-symbols-outlined text-xl">camera</span>
+                            <x-icon name="camera" class="w-5 h-5" />
                         </a>
                         <a aria-label="Facebook"
                             class="w-11 h-11 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#8a7568] dark:text-white/50 transition-all hover:border-primary hover:text-primary hover:scale-105"
                             href="#">
-                            <span class="material-symbols-outlined text-xl">public</span>
+                            <x-icon name="public" class="w-5 h-5" />
                         </a>
                         <a aria-label="Pinterest"
                             class="w-11 h-11 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#8a7568] dark:text-white/50 transition-all hover:border-primary hover:text-primary hover:scale-105"
                             href="#">
-                            <span class="material-symbols-outlined text-xl">grid_view</span>
+                            <x-icon name="grid_view" class="w-5 h-5" />
                         </a>
                         <a aria-label="Twitter"
                             class="w-11 h-11 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center text-[#8a7568] dark:text-white/50 transition-all hover:border-primary hover:text-primary hover:scale-105"
                             href="#">
-                            <span class="material-symbols-outlined text-xl">alternate_email</span>
+                            <x-icon name="alternate_email" class="w-5 h-5" />
                         </a>
                     </div>
                 </article>

@@ -40,7 +40,7 @@
 
             <div class="text-center mb-8">
                 <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
-                    <span class="material-symbols-outlined text-3xl">mail</span>
+                    <x-icon name="mail" class="w-8 h-8" />
                 </span>
                 <p class="text-sm text-[#6a5548] dark:text-white/60">
                     We sent a 6-digit code to <strong class="text-[#51423a] dark:text-white">{{ request('email') }}</strong>

@@ -3,17 +3,17 @@
         <div>
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-9 h-9 bg-premium-gradient flex items-center justify-center rounded-xl text-white shadow-lg shadow-primary/20">
-                    <span class="material-symbols-outlined text-lg">chair</span>
+                    <x-icon name="chair" class="w-5 h-5" />
                 </div>
                 <h1 class="text-xl font-extrabold tracking-tight text-[#1b1c1b] dark:text-white">HOMELIVING</h1>
             </div>
             <p class="text-sm text-[#6a5548] dark:text-white/60 leading-relaxed mb-6">Redefining the essence of modern living through timeless Scandinavian design and sustainable luxury.</p>
             <div class="flex gap-3">
                 <a class="w-10 h-10 flex items-center justify-center rounded-xl glass-morphism text-primary hover:bg-premium-gradient hover:text-white transition-all" href="#" aria-label="Website">
-                    <span class="material-symbols-outlined text-xl">public</span>
+                    <x-icon name="public" class="w-5 h-5" />
                 </a>
                 <a class="w-10 h-10 flex items-center justify-center rounded-xl glass-morphism text-primary hover:bg-premium-gradient hover:text-white transition-all" href="#" aria-label="Email">
-                    <span class="material-symbols-outlined text-xl">alternate_email</span>
+                    <x-icon name="alternate_email" class="w-5 h-5" />
                 </a>
             </div>
         </div>

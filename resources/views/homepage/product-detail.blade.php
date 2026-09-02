@@ -47,9 +47,9 @@
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10">
     <nav class="flex items-center gap-2 text-xs font-medium text-[#9a6c4c] dark:text-primary/70 mb-8 uppercase tracking-wider">
         <a class="hover:text-primary transition-colors" href="{{ route('homepage.home') }}">Home</a>
-        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <x-icon name="chevron_right" class="w-3.5 h-3.5" />
         <a class="hover:text-primary transition-colors" href="{{ route('homepage.product') }}">Products</a>
-        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <x-icon name="chevron_right" class="w-3.5 h-3.5" />
         <span class="text-charcoal dark:text-white font-bold">{{ $product->nama }}</span>
     </nav>
 
@@ -68,7 +68,7 @@
                     @csrf
                     <button type="submit"
                         class="w-10 h-10 glass-morphism !bg-black/40 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/70 hover:text-primary' }}">
-                        <span class="material-symbols-outlined text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                        <x-icon name="favorite" :filled="$isFavorited" class="w-5 h-5" />
                     </button>
                 </form>
             </div>
@@ -80,11 +80,11 @@
             <div class="flex items-center gap-4 mb-8">
                 <span class="text-3xl font-bold text-primary">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
                 <div class="flex gap-1 text-primary text-sm">
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg fill-1">star</span>
-                    <span class="material-symbols-outlined text-lg">star_half</span>
+                    <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                    <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                    <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                    <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                    <x-icon name="star_half" :filled="true" class="w-4 h-4 text-primary" />
                 </div>
                 <span class="text-sm text-gray-500">(24 Reviews)</span>
             </div>
@@ -105,7 +105,7 @@
             <div class="mt-12 grid grid-cols-2 gap-6 pt-10 border-t border-border-beige dark:border-white/10">
                 <div class="flex items-start gap-3">
                     <div class="w-10 h-10 rounded-full bg-warm-beige dark:bg-white/5 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-xl">local_shipping</span>
+                        <x-icon name="local_shipping" class="w-5 h-5 text-primary" />
                     </div>
                     <div>
                         <h5 class="font-bold text-sm mb-1">Fast Delivery</h5>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="flex items-start gap-3">
                     <div class="w-10 h-10 rounded-full bg-warm-beige dark:bg-white/5 flex items-center justify-center text-primary shrink-0">
-                        <span class="material-symbols-outlined text-xl">verified</span>
+                        <x-icon name="verified" class="w-5 h-5 text-primary" />
                     </div>
                     <div>
                         <h5 class="font-bold text-sm mb-1">Original Product</h5>

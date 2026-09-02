@@ -17,7 +17,7 @@
     <div class="max-w-7xl mx-auto mb-10">
         <div class="flex items-center gap-3 mb-2">
             <div class="h-10 w-10 rounded-2xl bg-premium-gradient flex items-center justify-center shadow-lg shadow-primary/30">
-                <span class="material-symbols-outlined text-white text-lg">favorite</span>
+                <x-icon name="favorite" :filled="true" class="w-5 h-5 text-white" />
             </div>
             <div>
                 <h1 class="text-3xl md:text-4xl font-black tracking-tight">My Wishlist</h1>
@@ -52,23 +52,23 @@
                         class="flex items-center justify-center w-10 h-10 rounded-xl bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all"
                         onclick="event.stopPropagation()"
                         aria-label="Remove from wishlist">
-                        <span class="material-symbols-outlined text-lg fill-1">favorite</span>
+                        <x-icon name="favorite" :filled="true" class="w-5 h-5 text-red-500" />
                     </button>
                 </form>
 
                 {{-- Arrow --}}
-                <span class="material-symbols-outlined text-[#8a7568] dark:text-white/30 shrink-0 hidden md:block">chevron_right</span>
+                <x-icon name="chevron_right" class="w-5 h-5 text-[#8a7568] dark:text-white/30 shrink-0 hidden md:block" />
             </div>
         @empty
             <div class="text-center py-20">
                 <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/5 mb-6">
-                    <span class="material-symbols-outlined text-4xl text-[#6a5548] dark:text-white/30">favorite_border</span>
+                    <x-icon name="favorite" class="w-10 h-10 text-[#6a5548] dark:text-white/30" />
                 </div>
                 <h3 class="text-2xl font-bold mb-2">Your wishlist is empty</h3>
                 <p class="text-[#6a5548] dark:text-white/60 mb-6">Save your favorite products here by tapping the heart icon.</p>
                 <a href="{{ route('homepage.product') }}"
                     class="inline-flex items-center gap-2 bg-premium-gradient text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-primary/30 hover:scale-105 transition-all">
-                    <span class="material-symbols-outlined text-lg">explore</span>
+                    <x-icon name="explore" class="w-5 h-5" />
                     Explore Products
                 </a>
             </div>

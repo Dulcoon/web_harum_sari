@@ -28,7 +28,7 @@
                         @csrf
                         @method('patch')
                         <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-semibold cursor-pointer hover:bg-primary/20 transition-colors">
-                            <span class="material-symbols-outlined text-base">photo_camera</span>
+                            <x-icon name="photo_camera" class="w-4 h-4" />
                             Change Photo
                             <input type="file" name="avatar" accept="image/*" class="hidden" onchange="this.form.submit()">
                         </label>
@@ -54,11 +54,11 @@
 
                 <div class="space-y-3 text-left text-sm">
                     <div class="flex items-center gap-3 text-[#51423a] dark:text-white/70">
-                        <span class="material-symbols-outlined text-base text-[#8a7568] dark:text-[#9a6c4c]">mail</span>
+                        <x-icon name="mail" class="w-4 h-4 text-[#8a7568] dark:text-[#9a6c4c]" />
                         <span class="truncate">{{ $user->email }}</span>
                     </div>
                     <div class="flex items-center gap-3 text-[#51423a] dark:text-white/70">
-                        <span class="material-symbols-outlined text-base text-[#8a7568] dark:text-[#9a6c4c]">call</span>
+                        <x-icon name="call" class="w-4 h-4 text-[#8a7568] dark:text-[#9a6c4c]" />
                         <span>{{ $user->phone ?? 'No phone' }}</span>
                     </div>
                 </div>

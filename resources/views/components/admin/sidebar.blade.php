@@ -123,7 +123,7 @@
                 class="inline-flex h-9 w-9 items-center justify-center rounded-xl text-[#51423a] hover:bg-black/5 dark:text-white/70 dark:hover:bg-white/5 lg:hidden"
                 aria-label="Close sidebar"
             >
-                <span class="material-symbols-outlined text-[20px]">close</span>
+                <x-icon name="close" class="w-5 h-5" />
             </button>
         </div>
     </div>
@@ -137,7 +137,7 @@
                 :class="{{ $collapsed }} ? 'lg:gap-0 lg:justify-center lg:px-0' : ''"
                 class="group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-[#51423a] transition-colors hover:bg-black/5 hover:text-primary dark:text-white/70 dark:hover:bg-white/5 {{ $link['active'] ? 'border-l-[3px] border-primary bg-primary/5 font-semibold text-primary dark:bg-primary/10' : '' }}"
             >
-                <span class="material-symbols-outlined text-[18px]">{{ $link['icon'] }}</span>
+                <x-icon :name="$link['icon']" class="w-5 h-5" />
                 <span :class="{{ $collapsed }} ? 'lg:hidden' : ''">{{ $link['label'] }}</span>
             </a>
         @endforeach
@@ -150,7 +150,7 @@
         :class="{{ $collapsed }} ? 'lg:justify-center lg:px-0 lg:mx-0' : ''"
         class="mt-8 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-deep px-4 py-3 text-sm font-bold text-white shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] active:scale-95"
     >
-        <span class="material-symbols-outlined text-[18px]">add</span>
+        <x-icon name="add" class="w-4 h-4" />
         <span :class="{{ $collapsed }} ? 'lg:hidden' : ''">New Collection</span>
     </a>
 
@@ -162,7 +162,7 @@
             :class="{{ $collapsed }} ? 'lg:gap-0 lg:justify-center lg:px-0' : ''"
             class="group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-[#51423a] transition-colors hover:bg-black/5 hover:text-primary dark:text-white/70 dark:hover:bg-white/5"
         >
-            <span class="material-symbols-outlined text-[18px]">help</span>
+            <x-icon name="help" class="w-5 h-5" />
             <span :class="{{ $collapsed }} ? 'lg:hidden' : ''">Support</span>
         </a>
     </div>

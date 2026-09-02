@@ -21,7 +21,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     @livewireStyles
 
     <script id="tailwind-config">
@@ -53,15 +53,6 @@
             min-height: 100vh;
         }
         h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
-
-        .material-symbols-outlined {
-            font-family: 'Material Symbols Outlined';
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            font-style: normal;
-            line-height: 1;
-            display: inline-block;
-            vertical-align: middle;
-        }
 
         html.dark body {
             background: radial-gradient(circle at top right, rgba(212, 98, 17, 0.12), transparent 38%),

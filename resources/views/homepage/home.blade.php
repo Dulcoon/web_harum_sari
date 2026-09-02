@@ -33,7 +33,7 @@
 
     <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <span class="material-symbols-outlined text-primary text-3xl">local_shipping</span>
+            <x-icon name="local_shipping" class="text-primary w-8 h-8 shrink-0" />
             <div>
                 <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Custom Shipping Assistance</p>
                 <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">We help you find the best shipping option</p>
@@ -41,7 +41,7 @@
         </article>
 
         <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <span class="material-symbols-outlined text-primary text-3xl">eco</span>
+            <x-icon name="eco" class="text-primary w-8 h-8 shrink-0" />
             <div>
                 <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Premium Materials</p>
                 <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">100% Sustainable Craftsmanship</p>
@@ -49,7 +49,7 @@
         </article>
 
         <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <span class="material-symbols-outlined text-primary text-3xl">assignment_return</span>
+            <x-icon name="assignment_return" class="text-primary w-8 h-8 shrink-0" />
             <div>
                 <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Easy Returns</p>
                 <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">Flexible 30-Day Return Policy</p>
@@ -104,7 +104,7 @@
                             @csrf
                             <button type="submit" onclick="event.stopPropagation()"
                                 class="w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/50 hover:text-primary' }}">
-                                <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                                <x-icon name="favorite" :filled="$isFavorited" class="w-5 h-5" />
                             </button>
                         </form>
                     </div>
@@ -138,11 +138,11 @@
                         <img src="{{ asset('assets/profile.webp') }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex justify-center gap-1 mb-4 text-primary">
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
-                        <span class="material-symbols-outlined text-sm">star</span>
+                        <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                        <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                        <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                        <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
+                        <x-icon name="star" :filled="true" class="w-4 h-4 text-primary" />
                     </div>
                     <p class="text-sm text-[#6a5548] dark:text-white/70 italic mb-5">"{{ $item['quote'] }}"</p>
                     <h4 class="font-bold text-lg text-[#1b1c1b] dark:text-white">{{ $item['name'] }}</h4>

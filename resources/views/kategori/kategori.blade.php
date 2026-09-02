@@ -47,7 +47,7 @@
                 <p class="mt-2 max-w-lg text-sm text-[#6e5a50] dark:text-[#b89983]">Organize your studio collection by architectural space and style.</p>
             </div>
             <button @click="createOpen = true" class="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-95 sm:px-8 sm:py-3.5" type="button">
-                <span class="material-symbols-outlined">add</span>
+                <x-icon name="add" class="w-5 h-5" />
                 Add New Category
             </button>
         </div>
@@ -79,7 +79,7 @@
                                         class="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-[#574238] shadow-sm transition-all hover:bg-white"
                                         aria-label="Edit {{ $category->nama }}"
                                     >
-                                        <span class="material-symbols-outlined text-sm">edit</span>
+                                        <x-icon name="edit" class="w-4 h-4" />
                                     </button>
                                     <button
                                         type="button"
@@ -87,7 +87,7 @@
                                         class="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-red-600 shadow-sm transition-all hover:bg-red-50"
                                         aria-label="Delete {{ $category->nama }}"
                                     >
-                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                        <x-icon name="delete" class="w-4 h-4" />
                                     </button>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                 <div class="sticky top-28 rounded-[2rem] glass-panel p-8">
                     <h3 class="mb-8 flex items-center gap-3 text-2xl font-semibold">
                         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                            <span class="material-symbols-outlined">edit_note</span>
+                            <x-icon name="edit_note" class="w-5 h-5" />
                         </span>
                         Edit Category
                     </h3>
@@ -152,7 +152,7 @@
                     <div class="mx-auto mb-6 h-1 w-12 shrink-0 rounded-full bg-[#dccfc4] dark:bg-white/20"></div>
                     <h3 class="mb-6 flex items-center gap-3 text-2xl font-semibold">
                         <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                            <span class="material-symbols-outlined">edit_note</span>
+                            <x-icon name="edit_note" class="w-5 h-5" />
                         </span>
                         Edit Category
                     </h3>
@@ -195,7 +195,7 @@
 
                 <div class="flex items-center gap-2 rounded-full border border-[#eadfd4] bg-white/40 p-1.5 dark:border-white/10">
                     <a href="{{ $categories->onFirstPage() ? '#' : $categories->previousPageUrl() }}" class="flex h-9 w-9 items-center justify-center rounded-full transition-colors {{ $categories->onFirstPage() ? 'pointer-events-none opacity-40' : 'hover:bg-white/60' }}">
-                        <span class="material-symbols-outlined text-sm">chevron_left</span>
+                        <x-icon name="chevron_left" class="w-4 h-4" />
                     </a>
 
                     @for($page = 1; $page <= $categories->lastPage(); $page++)
@@ -211,7 +211,7 @@
                     @endfor
 
                     <a href="{{ $categories->hasMorePages() ? $categories->nextPageUrl() : '#' }}" class="flex h-9 w-9 items-center justify-center rounded-full transition-colors {{ $categories->hasMorePages() ? 'hover:bg-white/60' : 'pointer-events-none opacity-40' }}">
-                        <span class="material-symbols-outlined text-sm">chevron_right</span>
+                        <x-icon name="chevron_right" class="w-4 h-4" />
                     </a>
                 </div>
             </div>
@@ -223,7 +223,7 @@
                 <div class="mb-5 flex items-center justify-between">
                     <h4 class="text-2xl font-semibold">Add New Category</h4>
                     <button @click="createOpen = false" class="rounded-full p-2 transition-colors hover:bg-black/5 dark:hover:bg-white/10" type="button">
-                        <span class="material-symbols-outlined">close</span>
+                        <x-icon name="close" class="w-5 h-5" />
                     </button>
                 </div>
 

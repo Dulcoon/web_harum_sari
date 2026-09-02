@@ -87,7 +87,7 @@
                     <div class="pt-4">
                         <button class="w-full bg-[#d46211] hover:bg-[#994200] text-white font-headline font-semibold py-4 rounded-lg shadow-[0_10px_20px_-5px_rgba(212,98,17,0.3)] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2" type="submit">
                             Sign In
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            <x-icon name="arrow_forward" class="w-4 h-4" />
                         </button>
                     </div>
                 </form>

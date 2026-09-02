@@ -46,7 +46,7 @@
                         </div>
                         <div>
                             <label class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-[#eadfd4] text-sm font-medium cursor-pointer hover:bg-black/5 dark:border-white/10 dark:text-white dark:hover:bg-white/5">
-                                <span class="material-symbols-outlined text-base">upload</span>
+                                <x-icon name="upload" class="w-4 h-4" />
                                 Upload Logo
                                 <input type="file" name="store_logo" accept="image/*" class="hidden">
                             </label>

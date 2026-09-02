@@ -37,7 +37,7 @@
             @click="openCreate()"
             class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-primary to-primary-deep px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-primary/25 transition-transform hover:scale-[1.01] active:scale-95"
         >
-            <span class="material-symbols-outlined text-[18px]">add</span>
+            <x-icon name="add" class="w-4 h-4" />
             Add New User
         </button>
     </div>
@@ -63,7 +63,7 @@
 
     <div class="relative z-40 grid grid-cols-1 gap-3 overflow-visible rounded-3xl glass-panel p-5 lg:grid-cols-12 lg:items-center">
         <div class="relative lg:col-span-7">
-            <span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#8b7266] dark:text-[#9a6c4c]">search</span>
+            <x-icon name="search" class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8b7266] dark:text-[#9a6c4c]" />
             <input
                 type="text"
                 wire:model.defer="search"
@@ -79,7 +79,7 @@
                 class="inline-flex h-11 w-full items-center justify-between rounded-xl border border-[#eadfd4] bg-white/70 px-3 text-sm text-[#4e4139] transition-colors hover:bg-white focus:border-primary focus:outline-none dark:border-white/10 dark:bg-white/5 dark:text-white/80"
             >
                 <span x-text="(options.find((item) => item.value === value)?.label) ?? 'Role: All'"></span>
-                <span class="material-symbols-outlined text-[18px] transition-transform" :class="open ? 'rotate-180 text-primary' : 'text-[#8b7266] dark:text-[#9a6c4c]'">expand_more</span>
+                <x-icon name="expand_more" class="w-4 h-4 transition-transform" ::class="open ? 'rotate-180 text-primary' : 'text-[#8b7266] dark:text-[#9a6c4c]'" />
             </button>
 
             <div
@@ -107,7 +107,7 @@
                 class="inline-flex h-11 w-full items-center justify-between rounded-xl border border-[#eadfd4] bg-white/70 px-3 text-sm text-[#4e4139] transition-colors hover:bg-white focus:border-primary focus:outline-none dark:border-white/10 dark:bg-white/5 dark:text-white/80"
             >
                 <span x-text="(options.find((item) => item.value === value)?.label) ?? 'Status: All'"></span>
-                <span class="material-symbols-outlined text-[18px] transition-transform" :class="open ? 'rotate-180 text-primary' : 'text-[#8b7266] dark:text-[#9a6c4c]'">expand_more</span>
+                <x-icon name="expand_more" class="w-4 h-4 transition-transform" ::class="open ? 'rotate-180 text-primary' : 'text-[#8b7266] dark:text-[#9a6c4c]'" />
             </button>
 
             <div
@@ -174,12 +174,12 @@
                         </div>
                         <div class="mt-2 flex gap-2">
                             <a href="{{ route('users.edit', $user) }}" @click="openEdit({ id: {{ $user->id }}, name: @js($user->name), email: @js($user->email), role: @js($role), verification_status: @js($isVerified ? 'verified' : 'unverified') })" @click.prevent class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70">
-                                <span class="material-symbols-outlined text-[16px]">edit</span>
+                                <x-icon name="edit" class="w-4 h-4" />
                             </a>
                             <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?');">
                                 @csrf @method('DELETE')
                                 <button type="submit" @click.prevent="openDelete({ id: {{ $user->id }}, name: @js($user->name) })" class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70">
-                                    <span class="material-symbols-outlined text-[16px]">delete</span>
+                                    <x-icon name="delete" class="w-4 h-4" />
                                 </button>
                             </form>
                         </div>
@@ -247,7 +247,7 @@
                                         class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-primary dark:border-white/10 dark:bg-white/5 dark:text-white/70"
                                         aria-label="Edit {{ $user->name }}"
                                     >
-                                        <span class="material-symbols-outlined text-[17px]">edit</span>
+                                        <x-icon name="edit" class="w-4 h-4" />
                                     </a>
 
                                     <form method="POST" action="{{ route('users.destroy', $user) }}" onsubmit="return confirm('Hapus user ini?');">
@@ -258,7 +258,7 @@
                                             class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#eadfd4] bg-white/70 text-[#7d6758] transition-colors hover:text-red-600 dark:border-white/10 dark:bg-white/5 dark:text-white/70"
                                             aria-label="Delete {{ $user->name }}"
                                         >
-                                            <span class="material-symbols-outlined text-[17px]">delete</span>
+                                            <x-icon name="delete" class="w-4 h-4" />
                                         </button>
                                     </form>
                                 </div>
@@ -279,7 +279,7 @@
             @if($users->hasPages())
                 <div class="flex items-center gap-2 rounded-full border border-[#eadfd4] bg-white/60 px-2 py-1.5 dark:border-white/10 dark:bg-white/5">
                     <button type="button" wire:click="previousPage" class="inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors {{ $users->onFirstPage() ? 'pointer-events-none opacity-40' : 'hover:bg-white dark:hover:bg-white/10' }}">
-                        <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                        <x-icon name="chevron_left" class="w-4 h-4" />
                     </button>
 
                     @for($page = 1; $page <= $users->lastPage(); $page++)
@@ -295,7 +295,7 @@
                     @endfor
 
                     <button type="button" wire:click="nextPage" class="inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors {{ $users->hasMorePages() ? 'hover:bg-white dark:hover:bg-white/10' : 'pointer-events-none opacity-40' }}">
-                        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                        <x-icon name="chevron_right" class="w-4 h-4" />
                     </button>
                 </div>
             @endif
@@ -308,7 +308,7 @@
             <div class="mb-5 flex items-center justify-between">
                 <h4 class="text-2xl font-semibold">Add New User</h4>
                 <button @click="createOpen = false" class="rounded-full p-2 transition-colors hover:bg-white/40" type="button">
-                    <span class="material-symbols-outlined">close</span>
+                    <x-icon name="close" class="w-5 h-5" />
                 </button>
             </div>
 
@@ -366,7 +366,7 @@
             <div class="mb-5 flex items-center justify-between">
                 <h4 class="text-2xl font-semibold">Edit User</h4>
                 <button @click="editOpen = false" class="rounded-full p-2 transition-colors hover:bg-white/40" type="button">
-                    <span class="material-symbols-outlined">close</span>
+                    <x-icon name="close" class="w-5 h-5" />
                 </button>
             </div>
 

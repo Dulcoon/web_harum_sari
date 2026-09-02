@@ -32,7 +32,7 @@
             <article class="rounded-2xl border border-[#eadfd4] bg-white/70 p-6 shadow-sm transition-transform hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/5 dark:shadow-none">
                 <div class="mb-5 flex items-start justify-between">
                     <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                        <span class="material-symbols-outlined text-[18px]">{{ $card['icon'] }}</span>
+                        <x-icon :name="$card['icon']" class="w-5 h-5" />
                     </div>
                     <span class="rounded-full px-2.5 py-1 text-[10px] font-bold {{ $trendBadgeClass }}">{{ $trendPrefix }}{{ number_format($trend, 1) }}%</span>
                 </div>
@@ -83,7 +83,7 @@
                             <p class="truncate text-sm font-bold">{{ $category['name'] }}</p>
                             <p class="text-xs text-[#6e5a50] dark:text-[#b89983]">{{ $category['share'] }}% of catalog</p>
                         </div>
-                        <span class="material-symbols-outlined text-primary opacity-0 transition-opacity group-hover:opacity-100">chevron_right</span>
+                        <x-icon name="chevron_right" class="w-5 h-5 text-primary opacity-0 transition-opacity group-hover:opacity-100" />
                     </div>
                 @empty
                     <p class="text-sm text-[#6e5a50] dark:text-[#b89983]">No category data available yet.</p>
@@ -141,7 +141,7 @@
                                 <td class="py-4 text-sm text-[#4e4139] dark:text-white/75">{{ $product['kategori'] }}</td>
                                 <td class="py-4">
                                     <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold {{ $product['stok'] == 0 ? 'bg-red-500/15 text-red-600 dark:text-red-400' : 'bg-amber-500/15 text-amber-700 dark:text-amber-400' }}">
-                                        <span class="material-symbols-outlined text-[14px]">{{ $product['stok'] == 0 ? 'block' : 'inventory_2' }}</span>
+                                        <x-icon :name="$product['stok'] == 0 ? 'block' : 'inventory_2'" class="w-3.5 h-3.5" />
                                         {{ $product['stok'] == 0 ? 'Out of Stock' : $product['stok'] . ' left' }}
                                     </span>
                                 </td>

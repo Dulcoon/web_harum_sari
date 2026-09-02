@@ -13,7 +13,7 @@
             <div class="flex items-center gap-3">
                 <div
                     class="flex-1 flex items-center rounded-2xl px-4 py-3 border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/5">
-                    <span class="material-symbols-outlined text-primary mr-2 text-[20px]">search</span>
+                    <x-icon name="search" class="text-primary mr-2 w-5 h-5" />
                     <input
                         class="w-full bg-transparent border-none focus:ring-0 text-sm text-[#1b1c1b] dark:text-white placeholder:text-[#8a7568] dark:placeholder:text-white/30"
                         placeholder="Search curated pieces..." type="text" />
@@ -23,7 +23,7 @@
                     <button type="button" aria-controls="mobile-filter-panel"
                         :aria-expanded="showMobileFilters.toString()" @click="showMobileFilters = !showMobileFilters"
                         class="w-12 h-12 flex items-center justify-center bg-premium-gradient text-white rounded-2xl shadow-lg shadow-primary/30 transition-all">
-                        <span class="material-symbols-outlined">tune</span>
+                        <x-icon name="tune" class="w-5 h-5" />
                     </button>
 
                     <div id="mobile-filter-panel" x-cloak x-show="showMobileFilters" x-transition.origin.top.right
@@ -88,7 +88,7 @@
                         </div>
                         <button type="button"
                             class="absolute top-3 right-3 w-9 h-9 glass-morphism !bg-black/40 rounded-full flex items-center justify-center text-primary shadow-lg">
-                            <span class="material-symbols-outlined text-xl">favorite</span>
+                            <x-icon name="favorite" class="w-5 h-5 text-primary" />
                         </button>
                     </div>
 
@@ -139,7 +139,7 @@
 
                     <button type="button"
                         class="w-full bg-premium-gradient text-white font-bold text-xs py-4 rounded-xl transition-all shadow-lg shadow-primary/20 hover:shadow-primary/50 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                        Apply Filters <span class="material-symbols-outlined text-sm">tune</span>
+                        Apply Filters <x-icon name="tune" class="w-4 h-4" />
                     </button>
                 </div>
 
@@ -223,7 +223,7 @@
                     <div class="glass-morphism rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4">
                         <div
                             class="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-xl flex items-center justify-center text-[#6a5548] dark:text-white/50">
-                            <span class="material-symbols-outlined">grid_view</span></div>
+                            <x-icon name="grid_view" class="w-5 h-5" /></div>
                         <div>
                             <h5 class="text-xl font-black leading-none text-[#1b1c1b] dark:text-white">
                                 {{ $kategories->count() }}</h5>
@@ -239,7 +239,7 @@
                         </div>
                         <div
                             class="w-10 h-10 md:w-12 md:h-12 bg-primary/20 rounded-xl flex items-center justify-center text-primary">
-                            <span class="material-symbols-outlined">chair</span></div>
+                            <x-icon name="chair" class="w-5 h-5" /></div>
                         <div>
                             <h5 class="text-xl font-black leading-none text-[#1b1c1b] dark:text-white">
                                 {{ $products->total() }}</h5>
@@ -250,7 +250,7 @@
                     <div class="glass-morphism rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4">
                         <div
                             class="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-xl flex items-center justify-center text-[#6a5548] dark:text-white/50">
-                            <span class="material-symbols-outlined">storefront</span></div>
+                            <x-icon name="storefront" class="w-5 h-5" /></div>
                         <div>
                             <h5 class="text-xl font-black leading-none text-[#1b1c1b] dark:text-white">15</h5>
                             <p class="text-[10px] font-bold text-[#8a7568] dark:text-white/40 uppercase tracking-wider">
@@ -261,7 +261,7 @@
                     <div class="glass-morphism rounded-2xl p-4 md:p-5 flex items-center gap-3 md:gap-4">
                         <div
                             class="w-10 h-10 md:w-12 md:h-12 bg-white/5 rounded-xl flex items-center justify-center text-[#6a5548] dark:text-white/50">
-                            <span class="material-symbols-outlined">person</span></div>
+                            <x-icon name="person" class="w-5 h-5" /></div>
                         <div>
                             <h5 class="text-xl font-black leading-none text-[#1b1c1b] dark:text-white">1.8k</h5>
                             <p class="text-[10px] font-bold text-[#8a7568] dark:text-white/40 uppercase tracking-wider">
@@ -274,7 +274,7 @@
                     <div class="flex items-center gap-4">
                         <div
                             class="w-10 h-10 bg-premium-gradient text-white flex items-center justify-center rounded-xl shadow-lg shadow-primary/30">
-                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            <x-icon name="check_circle" class="w-5 h-5" />
                         </div>
                         <p class="text-sm font-bold text-[#3a302a] dark:text-white/80">Curating <span
                                 class="premium-text-gradient text-base font-black">{{ $products->total() }} premium
@@ -323,7 +323,7 @@
                                     <button type="submit"
                                         onclick="event.stopPropagation()"
                                         class="w-8 h-8 md:w-9 md:h-9 glass-morphism !bg-black/30 rounded-full flex items-center justify-center transition-all hover:scale-110 {{ $isFavorited ? 'text-red-500' : 'text-white/50 hover:text-primary' }}">
-                                        <span class="material-symbols-outlined text-lg md:text-xl {{ $isFavorited ? 'fill-1' : '' }}">favorite</span>
+                                        <x-icon name="favorite" :filled="$isFavorited" class="w-5 h-5" />
                                     </button>
                                 </form>
                             </div>
@@ -338,7 +338,7 @@
                                         class="text-[9px] md:text-[10px] font-bold text-[#8a7568] dark:text-white/40 uppercase">{{ $loop->even ? 'Express' : 'Premium' }}</span>
                                 </div>
                                 <div class="pt-2 flex items-center gap-2 text-[#8a7568] dark:text-white/40">
-                                    <span class="material-symbols-outlined text-sm">local_shipping</span>
+                                    <x-icon name="local_shipping" class="w-4 h-4" />
                                     <span class="text-[9px] md:text-[10px] font-black uppercase tracking-wider">5-7 Days
                                         Delivery</span>
                                 </div>

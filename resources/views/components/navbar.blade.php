@@ -2,7 +2,7 @@
     <div class="max-w-[1440px] mx-auto flex items-center justify-between h-20 gap-4">
         <div class="flex items-center gap-3 min-w-0">
             <a href="{{ route('homepage.home') }}" class="w-10 h-10 bg-premium-gradient flex items-center justify-center rounded-xl text-white shadow-lg shadow-primary/30 shrink-0">
-                <span class="material-symbols-outlined">chair</span>
+                <x-icon name="chair" class="w-5 h-5" />
             </a>
             <a href="{{ route('homepage.home') }}" class="text-xl font-extrabold tracking-tight truncate text-[#1b1c1b] dark:text-white">HOMELIVING</a>
         </div>
@@ -15,7 +15,7 @@
 
         <div class="flex items-center gap-2 sm:gap-4">
             <div class="hidden lg:flex items-center bg-black/[0.03] dark:bg-white/5 rounded-2xl px-5 py-2.5 border border-black/10 dark:border-white/10 focus-within:border-primary/50 transition-all shadow-inner relative w-80">
-                <span class="material-symbols-outlined text-primary text-xl mr-2">search</span>
+                <x-icon name="search" class="text-primary w-5 h-5 mr-2" />
                 <input
                     id="nav-search-input"
                     type="text"
@@ -30,11 +30,12 @@
             </div>
 
             <a href="{{ route('wishlist.index') }}" class="hidden md:inline-flex p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Wishlist">
-                <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">favorite</span>
+                <x-icon name="favorite" class="w-5 h-5 text-[#2a2019] dark:text-white/80" />
             </a>
 
             <button id="theme-toggle-btn" type="button" class="p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Toggle dark mode">
-                <span id="theme-toggle-icon" class="material-symbols-outlined text-[#2a2019] dark:text-white/80">light_mode</span>
+                <span class="dark:hidden inline-flex items-center justify-center"><x-icon name="dark_mode" class="w-5 h-5 text-[#2a2019]" /></span>
+                <span class="hidden dark:inline-flex items-center justify-center"><x-icon name="light_mode" class="w-5 h-5 text-white/80" /></span>
             </button>
 
             @auth
@@ -75,13 +76,13 @@
 
                             <a href="{{ route('profile.edit') }}" @click="profileOpen = false"
                                 class="mt-1 flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#2a2019] dark:text-white/80 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
-                                <span class="material-symbols-outlined text-[18px]">person</span>
+                                <x-icon name="person" class="w-4 h-4" />
                                 My Profile
                             </a>
 
                             <a href="{{ route('wishlist.index') }}" @click="profileOpen = false"
                                 class="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-[#2a2019] dark:text-white/80 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
-                                <span class="material-symbols-outlined text-[18px]">favorite</span>
+                                <x-icon name="favorite" class="w-4 h-4" />
                                 Wishlist
                             </a>
 
@@ -89,7 +90,7 @@
                                 @csrf
                                 <button type="submit" @click="profileOpen = false"
                                     class="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10">
-                                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                                    <x-icon name="logout" class="w-4 h-4" />
                                     Logout
                                 </button>
                             </form>
@@ -98,7 +99,7 @@
                 </div>
             @else
                 <a href="{{ route('login') }}" class="hidden xl:inline-flex items-center gap-1.5 p-2.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-all relative" aria-label="Login">
-                    <span class="material-symbols-outlined text-[#2a2019] dark:text-white/80">login</span>
+                    <x-icon name="login" class="w-5 h-5 text-[#2a2019] dark:text-white/80" />
                 </a>
             @endauth
 
@@ -109,7 +110,6 @@
 <script>
     (function () {
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
-        const themeToggleIcon = document.getElementById('theme-toggle-icon');
         const searchInput = document.getElementById('nav-search-input');
         const searchResults = document.getElementById('nav-search-results');
         const root = document.documentElement;
@@ -122,10 +122,6 @@
             } else {
                 root.classList.remove('dark');
                 root.classList.add('light');
-            }
-
-            if (themeToggleIcon) {
-                themeToggleIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
             }
         };
 
