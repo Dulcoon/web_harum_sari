@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+PROJECT_DIR="${PROJECT_DIR:-/home/homelivi/laravel-crud}"
+PUBLIC_HTML_DIR="${PUBLIC_HTML_DIR:-/home/homelivi/public_html}"
+
+echo "=========================================="
+echo " Starting Deployment..."
+echo " Date: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "=========================================="
+
+# 1. Pindah ke direktori project
+echo "[1/7] Navigating to project directory..."
+cd "$PROJECT_DIR"
+echo "Current directory: $(pwd)"
+
+# 2. Setup Node environment via NVM
+echo "[2/7] Loading NVM & Node.js..."
+export NVM_DIR="$HOME/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    \. "$NVM_DIR/nvm.sh"
+    nvm use 18 || echo "Warning: Failed to switch to Node 18, using: $(node -v 2>/dev/null || echo 'none')"
+else
+    echo "Info: nvm.sh not found at $NVM_DIR, using default node: $(node -v 2>/dev/null || echo 'none')"
+fi
+
+# 3. Pull update terbaru dari repo
+echo "[3/7] Pulling latest code from Git (main)..."
+git pull origin main
+
+# 4. Dependency PHP (Composer)
+echo "[4/7] Optimizing Composer dependencies..."
+composer clear-cache
+composer install --no-dev --optimize-autoloader
+composer dump-autoload
+
+# 5. Build Frontend Assets (Vite)
+echo "[5/7] Installing NPM packages & building assets..."
+npm install
+npm run build
+
+# 6. Salin build assets ke public_html
+echo "[6/7] Deploying build assets to public_html..."
+rm -rf "$PUBLIC_HTML_DIR/build"
+cp -r public/build "$PUBLIC_HTML_DIR/"
+
+# 7. Laravel Artisan Optimization & Migration
+echo "[7/7] Running artisan commands..."
+php artisan storage:link --force
+php artisan migrate --force
+php artisan optimize:clear
+php artisan optimize
+
+echo "=========================================="
+echo "====== DEPLOY SUCCESS ======"
+echo "=========================================="
