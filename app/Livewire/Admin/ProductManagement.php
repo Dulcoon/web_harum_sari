@@ -71,7 +71,7 @@ class ProductManagement extends Component
         $productPayload = $products->getCollection()->map(function (Product $product) use ($defaultThumb) {
             return [
                 'id' => $product->id,
-                'slug' => $product->slug,
+                'slug' => $product->slug ?: (string) $product->id,
                 'nama' => $product->nama,
                 'harga' => (float) $product->harga,
                 'deskripsi' => (string) $product->deskripsi,

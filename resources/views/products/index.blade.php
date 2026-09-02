@@ -53,7 +53,7 @@
                     openEdit(product) {
                         this.editForm = {
                             id: product.id,
-                            slug: product.slug,
+                            slug: product.slug || String(product.id),
                             nama: product.nama ?? '',
                             harga: product.harga ?? '',
                             deskripsi: product.deskripsi ?? '',
@@ -65,7 +65,10 @@
                         this.editOpen = true;
                     },
                     openDelete(product) {
-                        this.deleteTarget = { ...product };
+                        this.deleteTarget = {
+                            ...product,
+                            slug: product.slug || String(product.id),
+                        };
                         this.deleteOpen = true;
                     },
                     applyOldFieldsToEdit() {
