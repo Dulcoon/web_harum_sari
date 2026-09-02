@@ -57,8 +57,12 @@
 
 <aside
     x-cloak
-    class="fixed left-0 top-0 z-50 flex h-full w-72 flex-col border-r border-[#eadfd4] bg-white/70 px-6 py-8 backdrop-blur-xl transition-all duration-300 ease-in-out dark:border-white/10 dark:bg-[#0f1116]/80 lg:translate-x-0"
-    :class="{{ $collapsed }} ? 'lg:w-20 lg:px-3' : ''"
+    class="fixed left-0 top-0 z-50 flex h-full w-72 flex-col overflow-y-auto border-r border-[#eadfd4] bg-white/70 px-6 py-8 backdrop-blur-xl transition-all duration-300 ease-in-out dark:border-white/10 dark:bg-[#0f1116]/80 lg:translate-x-0"
+    :class="{
+        'translate-x-0': {{ $open }},
+        '-translate-x-full': !{{ $open }},
+        'lg:w-20 lg:px-3': {{ $collapsed }}
+    }"
 >
     {{-- Logo / Brand --}}
     <div
