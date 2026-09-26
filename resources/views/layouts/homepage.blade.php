@@ -27,6 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..700&amp;display=swap" rel="stylesheet"/>
 
     @yield('seo')
 
@@ -131,6 +132,50 @@
             background: linear-gradient(135deg, #f39c12 0%, #d46211 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero scrims: fade the photo into the page background so the text
+           column and the image blend seamlessly (no hard seam). */
+        .hero-scrim {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        /* Desktop: solid on the left, transparent to the right. */
+        .hero-scrim-h {
+            background: linear-gradient(to right,
+                #f7f2ec 0%,
+                rgba(247, 242, 236, 0.97) 30%,
+                rgba(247, 242, 236, 0.66) 46%,
+                rgba(247, 242, 236, 0.22) 62%,
+                rgba(247, 242, 236, 0) 76%);
+        }
+        html.dark .hero-scrim-h {
+            background: linear-gradient(to right,
+                #1a0f0a 0%,
+                rgba(26, 15, 10, 0.97) 30%,
+                rgba(26, 15, 10, 0.66) 46%,
+                rgba(26, 15, 10, 0.22) 62%,
+                rgba(26, 15, 10, 0) 76%);
+        }
+
+        /* Mobile: solid at the bottom, transparent toward the top. */
+        .hero-scrim-v {
+            background: linear-gradient(to top,
+                #f7f2ec 0%,
+                rgba(247, 242, 236, 0.99) 46%,
+                rgba(247, 242, 236, 0.92) 62%,
+                rgba(247, 242, 236, 0.55) 78%,
+                rgba(247, 242, 236, 0) 94%);
+        }
+        html.dark .hero-scrim-v {
+            background: linear-gradient(to top,
+                #1a0f0a 0%,
+                rgba(26, 15, 10, 0.99) 46%,
+                rgba(26, 15, 10, 0.92) 62%,
+                rgba(26, 15, 10, 0.55) 78%,
+                rgba(26, 15, 10, 0) 94%);
         }
 
         input[type="range"].price-range-input {

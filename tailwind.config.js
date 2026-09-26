@@ -79,6 +79,7 @@ export default {
                 body: ['Inter', 'sans-serif'],
                 headline: ['Manrope', 'sans-serif'],
                 label: ['Inter', 'sans-serif'],
+                serif: ['"Playfair Display"', 'Georgia', 'serif'],
             },
             // Radius uses CSS variables so the homepage can keep its large radii
             // while admin/auth keep Tailwind defaults.

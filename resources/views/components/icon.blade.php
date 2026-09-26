@@ -282,6 +282,10 @@
         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
         @break
 
+    @case('arrow_back')
+        <path d="M19 12H5"/><path d="m12 19-7-7 7-7"/>
+        @break
+
     @case('explore')
         <circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
         @break

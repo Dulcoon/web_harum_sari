@@ -21,85 +21,208 @@
 @endsection
 
 @section('content')
-<main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10 space-y-10">
-    <section class="relative overflow-hidden rounded-[2.5rem] min-h-[520px] lg:min-h-[620px] flex items-center p-6 md:p-8 lg:p-12 border border-black/10 dark:border-white/10">
-        <div class="absolute inset-0">
-            {{-- LCP hero: eager + high priority, responsive AVIF/WebP so phones
-                 download a ~640px image instead of the full 1920px one. --}}
-            <picture>
-                <source type="image/avif"
-                    srcset="{{ asset('assets/hero-640.avif') }} 640w, {{ asset('assets/hero-1024.avif') }} 1024w, {{ asset('assets/hero-1536.avif') }} 1536w, {{ asset('assets/hero-1920.avif') }} 1920w"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px">
-                <source type="image/webp"
-                    srcset="{{ asset('assets/hero-640.webp') }} 640w, {{ asset('assets/hero-1024.webp') }} 1024w, {{ asset('assets/hero-1536.webp') }} 1536w, {{ asset('assets/hero-1920.webp') }} 1920w"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px">
-                <img src="{{ asset('assets/hero-1536.webp') }}" alt="Modern Scandinavian living room furnished by HOMELIVING"
-                    width="1920" height="1280" fetchpriority="high" decoding="async"
-                    class="absolute inset-0 w-full h-full object-cover scale-105" />
-            </picture>
-        </div>
+@php
+    $heroSlides = [
+        [
+            'base' => 'hero',
+            'alt' => 'Modern Scandinavian living room furnished by HOMELIVING',
+            'eyebrow' => 'Crafted Living',
+            'title' => 'Modern Furniture for',
+            'accent' => 'Modern Living',
+            'desc' => 'Curated Scandinavian pieces designed for comfort, longevity, and timeless aesthetic appeal.',
+        ],
+        [
+            'base' => 'gemini-banner',
+            'alt' => 'Warm neutral sofa and coffee table styled by HOMELIVING',
+            'eyebrow' => 'Timeless Comfort',
+            'title' => 'Pieces that make a house',
+            'accent' => 'feel like home',
+            'desc' => 'Natural textures and honest materials, made to be lived with for years to come.',
+        ],
+        [
+            'base' => 'bg-fix',
+            'alt' => 'Softly lit dining corner styled by HOMELIVING',
+            'eyebrow' => 'Quiet Luxury',
+            'title' => 'Crafted for the way',
+            'accent' => 'you live',
+            'desc' => 'From statement sofas to everyday essentials, every piece is chosen with intention.',
+        ],
+    ];
+@endphp
 
-        <div class="relative z-10 max-w-2xl p-6 md:p-8 lg:p-10 rounded-[2rem] glass-morphism shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
-            <div class="space-y-6">
-                <span class="inline-flex px-4 py-1 rounded-full bg-primary/20 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/25">Crafted Living</span>
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-[1.03] tracking-tight text-[#1b1c1b] dark:text-white">Modern Furniture for<br/><span class="premium-text-gradient">Modern Living</span></h1>
-                <p class="text-base md:text-lg text-[#5f4b3f] dark:text-white/75 max-w-xl">Curated Scandinavian pieces designed for comfort, longevity, and timeless aesthetic appeal.</p>
-                <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('homepage.product') }}" class="bg-premium-gradient text-white px-8 py-3.5 rounded-2xl font-black text-sm shadow-xl hover:scale-105 transition-all">Shop Collection</a>
-                    <a href="{{ route('email.form') }}" class="px-8 py-3.5 rounded-2xl font-black text-sm border border-black/15 dark:border-white/15 text-[#2a2019] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">Contact Team</a>
+<main class="relative z-10">
+    {{-- ============================= HERO ============================= --}}
+    <section
+        x-data="{
+            active: 0,
+            total: {{ count($heroSlides) }},
+            timer: null,
+            next() { this.active = (this.active + 1) % this.total },
+            prev() { this.active = (this.active - 1 + this.total) % this.total },
+            go(i) { this.active = i },
+            start() { this.timer = setInterval(() => this.next(), 6500) },
+            stop() { clearInterval(this.timer) },
+        }"
+        x-init="start()"
+        @mouseenter="stop()"
+        @mouseleave="start()"
+        class="relative bg-[#f7f2ec] dark:bg-[#1a0f0a] border-b border-black/5 dark:border-white/5 overflow-hidden"
+    >
+        <div class="relative max-w-[1440px] mx-auto min-h-[620px] lg:min-h-[680px] flex items-end lg:items-center">
+
+            {{-- Full-bleed slides --}}
+            @foreach($heroSlides as $i => $slide)
+                <picture>
+                    <source type="image/avif"
+                        srcset="{{ asset('assets/' . $slide['base'] . '-640.avif') }} 640w, {{ asset('assets/' . $slide['base'] . '-1024.avif') }} 1024w, {{ asset('assets/' . $slide['base'] . '-1536.avif') }} 1536w, {{ asset('assets/' . $slide['base'] . '-1920.avif') }} 1920w"
+                        sizes="100vw">
+                    <source type="image/webp"
+                        srcset="{{ asset('assets/' . $slide['base'] . '-640.webp') }} 640w, {{ asset('assets/' . $slide['base'] . '-1024.webp') }} 1024w, {{ asset('assets/' . $slide['base'] . '-1536.webp') }} 1536w, {{ asset('assets/' . $slide['base'] . '-1920.webp') }} 1920w"
+                        sizes="100vw">
+                    <img src="{{ asset('assets/' . $slide['base'] . '-1024.webp') }}"
+                        alt="{{ $slide['alt'] }}"
+                        width="1920" height="1280"
+                        @if($i === 0) fetchpriority="high" @else loading="lazy" @endif
+                        decoding="async"
+                        class="absolute inset-0 w-full h-full object-cover object-center"
+                        style="opacity: {{ $i === 0 ? 1 : 0 }}; transition: opacity 900ms ease;"
+                        x-bind:style="`opacity: ${active === {{ $i }} ? 1 : 0}; transition: opacity 900ms ease;`">
+                </picture>
+            @endforeach
+
+            {{-- Seamless scrims: desktop fades in from the left, mobile from the bottom --}}
+            <div class="hero-scrim hidden lg:block hero-scrim-h"></div>
+            <div class="hero-scrim lg:hidden hero-scrim-v"></div>
+
+            {{-- Content --}}
+            <div class="relative z-10 w-full px-6 sm:px-10 lg:px-16 py-14 lg:py-20">
+                <div class="w-full max-w-xl">
+                    @foreach($heroSlides as $i => $slide)
+                        <div
+                            x-show="active === {{ $i }}"
+                            x-transition:enter="transition ease-out duration-500"
+                            x-transition:enter-start="opacity-0 translate-y-3"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            @if($i > 0) style="display: none;" @endif
+                        >
+                            <span class="inline-block text-[11px] font-black uppercase tracking-[0.28em] text-primary/80">{{ $slide['eyebrow'] }}</span>
+                            <h1 class="mt-5 font-serif text-4xl sm:text-5xl lg:text-[3.6rem] leading-[1.06] tracking-tight text-[#2a2019] dark:text-white">
+                                {{ $slide['title'] }}<br>
+                                <span class="text-primary italic">{{ $slide['accent'] }}</span>
+                            </h1>
+                            <p class="mt-6 text-sm sm:text-base leading-relaxed text-[#6a5548] dark:text-white/65 max-w-md">{{ $slide['desc'] }}</p>
+                        </div>
+                    @endforeach
+
+                    {{-- CTAs --}}
+                    <div class="mt-9 flex flex-wrap items-center gap-3">
+                        <a href="{{ route('homepage.product') }}"
+                           class="inline-flex items-center gap-2 bg-primary hover:bg-primary-deep text-white px-7 py-3.5 rounded-md font-bold text-sm tracking-wide shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5">
+                            Shop Collection
+                            <x-icon name="arrow_forward" class="w-4 h-4" />
+                        </a>
+                        <a href="{{ route('email.form') }}"
+                           class="inline-flex items-center gap-2 px-7 py-3.5 rounded-md font-bold text-sm tracking-wide border border-[#2a2019]/20 dark:border-white/20 text-[#2a2019] dark:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all">
+                            Explore Catalog
+                        </a>
+                    </div>
+
+                    {{-- Slider controls --}}
+                    <div class="mt-12 flex items-center gap-5">
+                        <div class="flex items-center gap-2 text-sm font-bold tabular-nums text-[#2a2019] dark:text-white">
+                            <span x-text="String(active + 1).padStart(2, '0')"></span>
+                            <span class="h-px w-8 bg-[#2a2019]/25 dark:bg-white/25"></span>
+                            <span class="text-[#8a7568] dark:text-white/40">{{ str_pad((string) count($heroSlides), 2, '0', STR_PAD_LEFT) }}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" @click="prev()" aria-label="Previous slide"
+                                class="w-10 h-10 rounded-full border border-[#2a2019]/15 dark:border-white/20 flex items-center justify-center text-[#2a2019] dark:text-white hover:bg-primary hover:border-primary hover:text-white transition-all">
+                                <x-icon name="arrow_back" class="w-4 h-4" />
+                            </button>
+                            <button type="button" @click="next()" aria-label="Next slide"
+                                class="w-10 h-10 rounded-full border border-[#2a2019]/15 dark:border-white/20 flex items-center justify-center text-[#2a2019] dark:text-white hover:bg-primary hover:border-primary hover:text-white transition-all">
+                                <x-icon name="arrow_forward" class="w-4 h-4" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            {{-- Caption card --}}
+            <div class="absolute top-5 right-5 lg:top-auto lg:bottom-5 z-10 max-w-[170px] lg:max-w-[190px] rounded-tl-[1.5rem] rounded-br-[1.5rem] bg-[#2a2019]/85 dark:bg-black/70 backdrop-blur-sm px-4 py-3 lg:px-5 lg:py-4 text-white/90">
+                <p class="text-[11px] lg:text-xs leading-relaxed">A home should tell <span class="font-serif italic">your story</span>.</p>
+            </div>
         </div>
     </section>
 
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-        <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <x-icon name="local_shipping" class="text-primary w-8 h-8 shrink-0" />
-            <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Custom Shipping Assistance</p>
-                <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">We help you find the best shipping option</p>
-            </div>
-        </article>
+    {{-- ========================= FEATURE BAR ========================= --}}
+    <section class="bg-white dark:bg-[#221810] border-b border-black/5 dark:border-white/5">
+        <div class="max-w-[1440px] mx-auto grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-black/8 dark:divide-white/8">
+            <article class="flex items-center gap-4 px-6 sm:px-8 lg:px-10 py-7">
+                <x-icon name="local_shipping" class="w-7 h-7 shrink-0 text-[#2a2019] dark:text-white" />
+                <div>
+                    <p class="text-sm font-bold text-[#2a2019] dark:text-white">Custom Shipping Assistance</p>
+                    <p class="text-xs text-[#8a7568] dark:text-white/50 mt-0.5">We help you find the best option</p>
+                </div>
+            </article>
 
-        <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <x-icon name="eco" class="text-primary w-8 h-8 shrink-0" />
-            <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Premium Materials</p>
-                <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">100% Sustainable Craftsmanship</p>
-            </div>
-        </article>
+            <article class="flex items-center gap-4 px-6 sm:px-8 lg:px-10 py-7">
+                <x-icon name="eco" class="w-7 h-7 shrink-0 text-[#2a2019] dark:text-white" />
+                <div>
+                    <p class="text-sm font-bold text-[#2a2019] dark:text-white">Premium Materials</p>
+                    <p class="text-xs text-[#8a7568] dark:text-white/50 mt-0.5">100% sustainable craftsmanship</p>
+                </div>
+            </article>
 
-        <article class="glass-morphism rounded-2xl p-6 md:p-8 flex gap-4 items-start">
-            <x-icon name="assignment_return" class="text-primary w-8 h-8 shrink-0" />
-            <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.15em] text-[#8a7568] dark:text-white/45 mb-2">Easy Returns</p>
-                <p class="text-lg font-bold text-[#1b1c1b] dark:text-white">Flexible 30-Day Return Policy</p>
-            </div>
-        </article>
+            <article class="flex items-center gap-4 px-6 sm:px-8 lg:px-10 py-7">
+                <x-icon name="assignment_return" class="w-7 h-7 shrink-0 text-[#2a2019] dark:text-white" />
+                <div>
+                    <p class="text-sm font-bold text-[#2a2019] dark:text-white">Flexible Returns</p>
+                    <p class="text-xs text-[#8a7568] dark:text-white/50 mt-0.5">30-day return policy</p>
+                </div>
+            </article>
+        </div>
     </section>
 
-    <section id="categories" class="space-y-6">
-        <div class="flex items-center justify-between gap-4">
-            <div>
-                <h2 class="text-3xl md:text-4xl font-black tracking-tight text-[#1b1c1b] dark:text-white">Browse by Category</h2>
-                <p class="text-sm text-[#6a5548] dark:text-white/60">Find pieces tailored to each corner of your home.</p>
-            </div>
-            <a class="text-sm font-bold text-primary hover:underline underline-offset-4" href="{{ route('homepage.product') }}">View All</a>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
-            @foreach($kategories as $kategori)
-                <a class="group relative aspect-[4/5] rounded-2xl overflow-hidden product-glass-card" href="{{ route('productss', ['kategori_id' => $kategori->id]) }}">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                        style='background-image: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0.08)), url("{{ asset('storage/' . $kategori->thumbnail) }}");'></div>
-                    <div class="absolute inset-x-0 bottom-0 p-4 md:p-5 text-white">
-                        <p class="text-base md:text-lg font-bold leading-tight">{{ $kategori->nama }}</p>
-                        <p class="text-[10px] font-black uppercase tracking-[0.12em] text-white/70 mt-1">{{ $kategori->products_count }} Products</p>
-                    </div>
+    {{-- ======================== BROWSE CATEGORY ======================== --}}
+    <section id="categories" class="bg-white dark:bg-[#221810]">
+        <div class="max-w-[1440px] mx-auto px-6 sm:px-10 lg:px-16 py-16 lg:py-20">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+                <div>
+                    <h2 class="font-serif text-3xl sm:text-4xl lg:text-[2.6rem] tracking-tight text-[#2a2019] dark:text-white">Browse by Category</h2>
+                    <p class="mt-2 text-sm text-[#8a7568] dark:text-white/55">Find pieces tailored to each corner of your home.</p>
+                </div>
+                <a href="{{ route('homepage.product') }}"
+                   class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-primary hover:gap-3 transition-all">
+                    View All Categories
+                    <x-icon name="arrow_forward" class="w-4 h-4" />
                 </a>
-            @endforeach
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-x-5 gap-y-8">
+                @forelse($kategories as $kategori)
+                    <a href="{{ route('productss', ['kategori_id' => $kategori->id]) }}" class="group block">
+                        <div class="relative aspect-[4/5] rounded-xl overflow-hidden bg-[#efe6dd] dark:bg-white/5">
+                            <img
+                                src="{{ $kategori->thumbnail ? asset('storage/' . $kategori->thumbnail) : asset('assets/no_image.webp') }}"
+                                alt="{{ $kategori->nama }}"
+                                loading="lazy" decoding="async"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        </div>
+                        <div class="mt-4 flex items-center justify-between gap-2">
+                            <h3 class="text-sm font-bold text-[#2a2019] dark:text-white truncate group-hover:text-primary transition-colors">{{ $kategori->nama }}</h3>
+                            <x-icon name="arrow_forward" class="w-4 h-4 shrink-0 text-[#2a2019]/40 dark:text-white/40 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+                        </div>
+                        <p class="mt-1 text-xs text-[#8a7568] dark:text-white/45">{{ $kategori->products_count }} Products</p>
+                    </a>
+                @empty
+                    <p class="col-span-full text-sm text-[#8a7568] dark:text-white/50">No categories yet.</p>
+                @endforelse
+            </div>
         </div>
     </section>
+
+    <div class="max-w-[1440px] mx-auto px-4 lg:px-10 py-10 lg:py-14 space-y-10">
 
     <section id="featured" class="space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
@@ -172,5 +295,6 @@
             @endforeach
         </div>
     </section>
+    </div>
 </main>
 @endsection

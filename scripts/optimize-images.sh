@@ -23,6 +23,7 @@ assets = sys.argv[1]
 TARGETS = {
     'hero.webp': [640, 1024, 1536, 1920],
     'gemini-banner.webp': [640, 1024, 1536],
+    'bg-fix.webp': [640, 1024, 1536, 1920],
 }
 
 AVIF_QUALITY = 55
