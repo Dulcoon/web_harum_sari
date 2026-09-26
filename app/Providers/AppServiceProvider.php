@@ -39,9 +39,9 @@ class AppServiceProvider extends ServiceProvider
      * http://127.0.0.1:5173 instead of the compiled build/ folder, which breaks
      * all styling on production.
      *
-     * The check is intentionally environment-independent so it still works when
-     * APP_ENV is misconfigured on the server. The hot file is only kept when it
-     * actually points at a local dev server on a locally-hosted app.
+     * A hot file is only kept for a genuine local setup: APP_ENV=local, the dev
+     * server on loopback, and the app itself reached through a loopback host.
+     * Every other combination is treated as stale and removed.
      */
     protected function ensureProductionAssets(): void
     {
@@ -52,27 +52,22 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $hotHost = parse_url((string) @file_get_contents($hotFile), PHP_URL_HOST) ?: '';
-        $appHost = parse_url((string) config('app.url'), PHP_URL_HOST) ?: '';
+
+        // Prefer the real request host; fall back to APP_URL for console usage.
+        $requestHost = $this->app->runningInConsole()
+            ? (parse_url((string) config('app.url'), PHP_URL_HOST) ?: '')
+            : request()->getHost();
 
         $isLoopback = fn (string $host): bool => in_array($host, ['127.0.0.1', 'localhost', '::1'], true);
 
-        // Real development machine: dev server on a loopback host and the app
-        // itself is also served from a loopback host. Keep hot reload working.
-        if ($isLoopback($hotHost) && $isLoopback($appHost)) {
+        $isGenuineLocalDev = $this->app->environment('local')
+            && $isLoopback($hotHost)
+            && $isLoopback($requestHost);
+
+        if ($isGenuineLocalDev) {
             return;
         }
 
-        // Production / non-local: never serve assets from a dev server.
-        if (! $this->app->environment('local')) {
-            @unlink($hotFile);
-
-            return;
-        }
-
-        // Local env but the app is served from a real domain while the hot file
-        // still points at a dev server: treat it as stale and remove it.
-        if ($isLoopback($hotHost) && ! $isLoopback($appHost)) {
-            @unlink($hotFile);
-        }
+        @unlink($hotFile);
     }
 }
