@@ -2,6 +2,15 @@
 
 @section('title', 'HOMELIVING | Home')
 
+@section('head')
+    {{-- Preload the LCP hero so the browser fetches it at high priority before
+         it parses the body. imagesrcset lets the browser pick the right size. --}}
+    <link rel="preload" as="image" type="image/avif" fetchpriority="high"
+        href="{{ asset('assets/hero-1024.avif') }}"
+        imagesrcset="{{ asset('assets/hero-640.avif') }} 640w, {{ asset('assets/hero-1024.avif') }} 1024w, {{ asset('assets/hero-1536.avif') }} 1536w, {{ asset('assets/hero-1920.avif') }} 1920w"
+        imagesizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px">
+@endsection
+
 @section('seo')
     <x-seo
         title="HOMELIVING | Home"
@@ -15,7 +24,19 @@
 <main class="relative z-10 max-w-[1440px] mx-auto px-4 lg:px-10 py-8 lg:py-10 space-y-10">
     <section class="relative overflow-hidden rounded-[2.5rem] min-h-[520px] lg:min-h-[620px] flex items-center p-6 md:p-8 lg:p-12 border border-black/10 dark:border-white/10">
         <div class="absolute inset-0">
-            <div class="absolute inset-0 bg-cover bg-center scale-105" style='background-image: url("{{ asset('assets/hero.webp') }}");'></div>
+            {{-- LCP hero: eager + high priority, responsive AVIF/WebP so phones
+                 download a ~640px image instead of the full 1920px one. --}}
+            <picture>
+                <source type="image/avif"
+                    srcset="{{ asset('assets/hero-640.avif') }} 640w, {{ asset('assets/hero-1024.avif') }} 1024w, {{ asset('assets/hero-1536.avif') }} 1536w, {{ asset('assets/hero-1920.avif') }} 1920w"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px">
+                <source type="image/webp"
+                    srcset="{{ asset('assets/hero-640.webp') }} 640w, {{ asset('assets/hero-1024.webp') }} 1024w, {{ asset('assets/hero-1536.webp') }} 1536w, {{ asset('assets/hero-1920.webp') }} 1920w"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1440px) 100vw, 1440px">
+                <img src="{{ asset('assets/hero-1536.webp') }}" alt="Modern Scandinavian living room furnished by HOMELIVING"
+                    width="1920" height="1280" fetchpriority="high" decoding="async"
+                    class="absolute inset-0 w-full h-full object-cover scale-105" />
+            </picture>
         </div>
 
         <div class="relative z-10 max-w-2xl p-6 md:p-8 lg:p-10 rounded-[2rem] glass-morphism shadow-[0_20px_50px_rgba(0,0,0,0.18)]">

@@ -81,8 +81,12 @@
                     <p class="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 mb-4">Featured Selection
                     </p>
                     <div class="relative aspect-[4/5] rounded-xl overflow-hidden mb-5 group">
-                        <img src="{{ asset('assets/hero.webp') }}" alt="Featured collection" loading="lazy"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 brightness-90" />
+                        <picture>
+                            <source type="image/avif" srcset="{{ asset('assets/hero-640.avif') }} 640w, {{ asset('assets/hero-1024.avif') }} 1024w" sizes="(max-width: 1024px) 100vw, 320px">
+                            <source type="image/webp" srcset="{{ asset('assets/hero-640.webp') }} 640w, {{ asset('assets/hero-1024.webp') }} 1024w" sizes="(max-width: 1024px) 100vw, 320px">
+                            <img src="{{ asset('assets/hero-640.webp') }}" alt="Featured collection" loading="lazy" decoding="async" width="640" height="800"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 brightness-90" />
+                        </picture>
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
                         </div>
@@ -193,8 +197,12 @@
 
                     {{-- Full-height image on the right --}}
                     <div class="absolute inset-y-0 right-0 w-1/2 md:w-3/5 overflow-hidden rounded-r-[2.5rem]">
-                        <img src="{{ asset('assets/gemini-banner.webp') }}" alt="Hero Sofa" loading="lazy"
-                            class="h-full w-full object-cover drop-shadow-[0_35px_35px_rgba(212,98,17,0.35)] hover:rotate-2 transition-transform duration-700" />
+                        <picture>
+                            <source type="image/avif" srcset="{{ asset('assets/gemini-banner-640.avif') }} 640w, {{ asset('assets/gemini-banner-1024.avif') }} 1024w, {{ asset('assets/gemini-banner-1536.avif') }} 1536w" sizes="(max-width: 768px) 50vw, 60vw">
+                            <source type="image/webp" srcset="{{ asset('assets/gemini-banner-640.webp') }} 640w, {{ asset('assets/gemini-banner-1024.webp') }} 1024w, {{ asset('assets/gemini-banner-1536.webp') }} 1536w" sizes="(max-width: 768px) 50vw, 60vw">
+                            <img src="{{ asset('assets/gemini-banner-1024.webp') }}" alt="Hero Sofa" loading="lazy" decoding="async" width="1920" height="1279"
+                                class="h-full w-full object-cover drop-shadow-[0_35px_35px_rgba(212,98,17,0.35)] hover:rotate-2 transition-transform duration-700" />
+                        </picture>
                         <div class="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-[#f9f4ed] dark:from-[#221810] to-transparent pointer-events-none"></div>
                     </div>
 
