@@ -1,4 +1,4 @@
-<nav class="md:hidden fixed bottom-4 left-0 right-0 mx-auto z-50 flex items-center justify-around h-16 px-6 glass-morphism w-[min(92vw,44rem)] rounded-full border border-black/10 dark:border-white/10 shadow-[0_20px_40px_rgba(27,28,27,0.08)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.35)]">
+<nav class="md:hidden fixed bottom-4 left-0 right-0 mx-auto z-50 flex items-center justify-around h-16 px-6 bg-white/95 dark:bg-[#1b1c1b]/95 backdrop-blur-sm border border-black/10 dark:border-white/10 shadow-[0_20px_40px_rgba(27,28,27,0.08)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.35)] w-[min(92vw,44rem)] rounded-full">
     <a class="flex flex-col items-center justify-center transition-all duration-300 {{ Route::is('homepage.home') ? 'text-primary scale-105' : 'text-[#1b1c1b] dark:text-white opacity-45 hover:opacity-100' }}"
         href="{{ route('homepage.home') }}">
         <x-icon name="home" class="w-5 h-5" />

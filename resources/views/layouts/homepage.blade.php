@@ -23,11 +23,8 @@
     </script>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
 
@@ -37,40 +34,15 @@
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
 
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#d46211",
-                        "primary-dark": "#b0510e",
-                        "background-light": "#f3efeb",
-                        "background-dark": "#1a0f0a",
-                    },
-                    backgroundImage: {
-                        'premium-gradient': 'linear-gradient(135deg, #e67e22 0%, #d46211 100%)',
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "sans-serif"],
-                        "body": ["Inter", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.75rem",
-                        "lg": "1.25rem",
-                        "xl": "1.75rem",
-                        "2xl": "2.25rem",
-                        "full": "9999px"
-                    },
-                    boxShadow: {
-                        'warm': '0 20px 40px -15px rgba(212, 98, 17, 0.3)',
-                    }
-                },
-            },
-        }
-    </script>
-
     <style>
+        /* Homepage keeps its larger radii; admin/auth fall back to Tailwind defaults. */
+        :root {
+            --radius-default: 0.75rem;
+            --radius-lg: 1.25rem;
+            --radius-xl: 1.75rem;
+            --radius-2xl: 2.25rem;
+        }
+
         body {
             font-family: "Manrope", sans-serif;
             min-height: 100vh;
@@ -87,29 +59,29 @@
         }
 
         .glass-morphism {
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         html.dark .glass-morphism {
-            background: rgba(40, 25, 15, 0.7);
+            background: rgba(40, 25, 15, 0.82);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         html.light .glass-morphism {
-            background: rgba(255, 255, 255, 0.72);
+            background: rgba(255, 255, 255, 0.82);
             border: 1px solid rgba(229, 215, 202, 0.6);
             box-shadow: 0 16px 40px rgba(132, 74, 22, 0.08);
         }
 
         .product-glass-card {
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
         }
 
         html.dark .product-glass-card {
-            background: linear-gradient(145deg, rgba(47, 28, 18, 0.8) 0%, rgba(33, 20, 14, 0.86) 100%);
+            background: linear-gradient(145deg, rgba(47, 28, 18, 0.88) 0%, rgba(33, 20, 14, 0.92) 100%);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 16px 30px -20px rgba(212, 98, 17, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
@@ -120,7 +92,7 @@
         }
 
         html.light .product-glass-card {
-            background: rgba(255, 255, 255, 0.76);
+            background: rgba(255, 255, 255, 0.86);
             border: 1px solid rgba(229, 215, 202, 0.6);
             box-shadow: 0 14px 28px -20px rgba(150, 90, 36, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.85);
         }
@@ -131,8 +103,8 @@
         }
 
         .product-media-shell {
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         html.dark .product-media-shell {
@@ -143,6 +115,16 @@
         html.light .product-media-shell {
             background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(229, 215, 202, 0.62);
+        }
+
+        /* Fallback: browsers without backdrop-filter get solid, readable surfaces. */
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            html.dark .glass-morphism { background: #28190f; }
+            html.light .glass-morphism { background: #ffffff; }
+            html.dark .product-glass-card { background: #2f1c12; }
+            html.light .product-glass-card { background: #ffffff; }
+            html.dark .product-media-shell { background: #2a1d14; }
+            html.light .product-media-shell { background: #ffffff; }
         }
 
         .premium-text-gradient {
@@ -268,17 +250,22 @@
         [x-cloak] {
             display: none !important;
         }
+
+        /* Single cheap ambient layer instead of several huge GPU blur() layers,
+           which caused iOS Safari to stop painting content after the hero. */
+        .page-ambient {
+            background:
+                radial-gradient(60% 45% at 0% 0%, rgba(124, 45, 18, 0.20), transparent 70%),
+                radial-gradient(65% 50% at 100% 20%, rgba(120, 53, 15, 0.15), transparent 72%),
+                radial-gradient(70% 45% at 45% 100%, rgba(212, 98, 17, 0.10), transparent 70%);
+        }
     </style>
 
     @yield('head')
     @livewireStyles
 </head>
 <body class="font-display transition-colors duration-300 selection:bg-primary selection:text-white pb-24 md:pb-0">
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div class="absolute -top-[10%] -left-[5%] w-[50%] h-[50%] bg-orange-900/20 rounded-full blur-[140px]"></div>
-        <div class="absolute top-[20%] -right-[10%] w-[60%] h-[60%] bg-amber-900/15 rounded-full blur-[160px]"></div>
-        <div class="absolute bottom-0 left-[20%] w-[70%] h-[50%] bg-primary/10 rounded-full blur-[120px]"></div>
-    </div>
+    <div class="page-ambient fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
 
     <x-navbar />
 

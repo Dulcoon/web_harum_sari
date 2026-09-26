@@ -20,29 +20,8 @@
     <title>{{ $title }} | HOMELIVING</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     @livewireStyles
-
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#d46211",
-                        "primary-deep": "#994200",
-                        "sand": "#9a6c4c",
-                        "accent": "#d46211",
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                    }
-                }
-            }
-        }
-    </script>
 
     <style>
         :root { color-scheme: light; }
@@ -68,13 +47,12 @@
             z-index: -1;
             pointer-events: none;
             border-radius: 9999px;
-            filter: blur(90px);
             opacity: 0.35;
         }
-        .blob-1 { width: 520px; height: 520px; top: -140px; right: -130px; background: #f7e4d2; }
-        .blob-2 { width: 420px; height: 420px; bottom: -80px; left: -120px; background: #fdf2e7; }
+        .blob-1 { width: 520px; height: 520px; top: -140px; right: -130px; background: radial-gradient(circle, #f7e4d2, transparent 70%); }
+        .blob-2 { width: 420px; height: 420px; bottom: -80px; left: -120px; background: radial-gradient(circle, #fdf2e7, transparent 70%); }
         html.dark .blob { opacity: 0.22; }
-        html.dark .blob-1, html.dark .blob-2 { background: #d46211; }
+        html.dark .blob-1, html.dark .blob-2 { background: radial-gradient(circle, #d46211, transparent 70%); }
 
         /* Glass styles — shared across all admin pages */
         .glass-panel {

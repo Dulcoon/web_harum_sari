@@ -1,4 +1,4 @@
-<footer class="relative z-10 glass-morphism border-t border-black/10 dark:border-white/5 mt-24 py-16">
+<footer class="relative z-10 bg-white/90 dark:bg-[#221810]/95 backdrop-blur-sm border-t border-black/10 dark:border-white/5 mt-24 py-16">
     <div class="max-w-[1440px] mx-auto px-4 lg:px-10 grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
             <div class="flex items-center gap-3 mb-6">

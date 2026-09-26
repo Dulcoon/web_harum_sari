@@ -188,8 +188,8 @@
             <section class="flex-1 space-y-8">
                 <div
                     class="relative glass-morphism rounded-[2.5rem] p-7 md:p-10 lg:p-14 overflow-hidden shadow-warm min-h-[320px]">
-                    <div class="absolute -top-20 -right-20 w-72 h-72 bg-orange-500/20 rounded-full blur-[80px]"></div>
-                    <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-primary/15 rounded-full blur-[80px]"></div>
+                    <div class="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.20),transparent_70%)]"></div>
+                    <div class="absolute -bottom-20 -left-20 w-72 h-72 rounded-full bg-[radial-gradient(circle,rgba(212,98,17,0.15),transparent_70%)]"></div>
 
                     {{-- Full-height image on the right --}}
                     <div class="absolute inset-y-0 right-0 w-1/2 md:w-3/5 overflow-hidden rounded-r-[2.5rem]">
