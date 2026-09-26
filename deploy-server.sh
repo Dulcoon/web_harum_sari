@@ -40,13 +40,21 @@ composer dump-autoload
 echo "[5/7] Installing NPM packages & building assets..."
 # Remove the Vite dev-server marker. If present, Laravel loads assets from
 # http://127.0.0.1:5173 (dev server) instead of the compiled build/ folder,
-# which breaks all styling on production.
-rm -f public/hot "$PUBLIC_HTML_DIR/hot"
+# which breaks all styling on production. `rm -rf` handles files, dirs, links.
+rm -rf public/hot "$PUBLIC_HTML_DIR/hot"
+find "$PROJECT_DIR/public" "$PUBLIC_HTML_DIR" -maxdepth 1 -name hot -exec rm -rf {} + 2>/dev/null || true
 npm install
 npm run build
 
 if [ ! -f public/build/manifest.json ]; then
     echo "ERROR: public/build/manifest.json not found after build. Aborting."
+    exit 1
+fi
+
+# Fail fast if the dev-server marker somehow survived; otherwise production
+# would silently keep serving assets from 127.0.0.1:5173.
+if [ -e public/hot ] || [ -e "$PUBLIC_HTML_DIR/hot" ]; then
+    echo "ERROR: a Vite 'hot' file still exists. Remove it and re-run."
     exit 1
 fi
 
