@@ -38,13 +38,28 @@ composer dump-autoload
 
 # 5. Build Frontend Assets (Vite)
 echo "[5/7] Installing NPM packages & building assets..."
+# Remove the Vite dev-server marker. If present, Laravel loads assets from
+# http://127.0.0.1:5173 (dev server) instead of the compiled build/ folder,
+# which breaks all styling on production.
+rm -f public/hot "$PUBLIC_HTML_DIR/hot"
 npm install
 npm run build
+
+if [ ! -f public/build/manifest.json ]; then
+    echo "ERROR: public/build/manifest.json not found after build. Aborting."
+    exit 1
+fi
 
 # 6. Salin build assets ke public_html
 echo "[6/7] Deploying build assets to public_html..."
 rm -rf "$PUBLIC_HTML_DIR/build"
 cp -r public/build "$PUBLIC_HTML_DIR/"
+
+# 6b. Sync public assets (images, favicon, robots.txt) so the compressed WebP
+# images in public/assets reach the web root. build/, index.php and .htaccess
+# are excluded because they are handled separately / server-specific.
+echo "[6b/7] Syncing public assets to public_html..."
+rsync -a --delete --exclude=build --exclude=index.php --exclude=.htaccess --exclude=hot --exclude=storage public/ "$PUBLIC_HTML_DIR/"
 
 # 7. Laravel Artisan Optimization & Migration
 echo "[7/7] Running artisan commands..."
