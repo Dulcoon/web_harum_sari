@@ -2,6 +2,7 @@
 
 # Exit immediately if a command exits with a non-zero status
 set -e
+set -o pipefail
 
 PROJECT_DIR="${PROJECT_DIR:-/home/homelivi/laravel-crud}"
 PUBLIC_HTML_DIR="${PUBLIC_HTML_DIR:-/home/homelivi/public_html}"
@@ -66,8 +67,22 @@ cp -r public/build "$PUBLIC_HTML_DIR/"
 # 6b. Sync public assets (images, favicon, robots.txt) so the compressed WebP
 # images in public/assets reach the web root. build/, index.php and .htaccess
 # are excluded because they are handled separately / server-specific.
+# rsync is preferred (it can prune stale files); tar is a portable fallback
+# because rsync is often missing on shared hosting.
 echo "[6b/7] Syncing public assets to public_html..."
-rsync -a --delete --exclude=build --exclude=index.php --exclude=.htaccess --exclude=hot --exclude=storage public/ "$PUBLIC_HTML_DIR/"
+if command -v rsync >/dev/null 2>&1; then
+    rsync -a --delete --exclude=build --exclude=build.zip --exclude=index.php --exclude=.htaccess --exclude=hot --exclude=storage public/ "$PUBLIC_HTML_DIR/"
+else
+    echo "Info: rsync not found, falling back to tar."
+    tar -C public \
+        --exclude=./build \
+        --exclude=./build.zip \
+        --exclude=./index.php \
+        --exclude=./.htaccess \
+        --exclude=./hot \
+        --exclude=./storage \
+        -cf - . | tar -C "$PUBLIC_HTML_DIR" -xf -
+fi
 
 # 7. Laravel Artisan Optimization & Migration
 echo "[7/7] Running artisan commands..."
