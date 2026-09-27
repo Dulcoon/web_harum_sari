@@ -22,6 +22,8 @@
 
 @section('content')
 @php
+    // Slide 1: hero, slide 2: gemini-banner.
+    // Slide 3 is intentionally empty — a third image will be added later.
     $heroSlides = [
         [
             'base' => 'hero',
@@ -38,14 +40,6 @@
             'title' => 'Pieces that make a house',
             'accent' => 'feel like home',
             'desc' => 'Natural textures and honest materials, made to be lived with for years to come.',
-        ],
-        [
-            'base' => 'bg-fix',
-            'alt' => 'Softly lit dining corner styled by HOMELIVING',
-            'eyebrow' => 'Quiet Luxury',
-            'title' => 'Crafted for the way',
-            'accent' => 'you live',
-            'desc' => 'From statement sofas to everyday essentials, every piece is chosen with intention.',
         ],
     ];
 @endphp
@@ -82,7 +76,7 @@
                     <img src="{{ asset('assets/' . $slide['base'] . '-1024.webp') }}"
                         alt="{{ $slide['alt'] }}"
                         width="1920" height="1280"
-                        @if($i === 0) fetchpriority="high" @else loading="lazy" @endif
+                        @if($i === 0) fetchpriority="high" @endif
                         decoding="async"
                         class="absolute inset-0 w-full h-full object-cover object-center"
                         style="opacity: {{ $i === 0 ? 1 : 0 }}; transition: opacity 900ms ease;"

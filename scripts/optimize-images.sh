@@ -31,7 +31,16 @@ WEBP_QUALITY = 80
 
 
 def generate(src_path, base, widths):
-    image = Image.open(src_path).convert('RGB')
+    raw = Image.open(src_path)
+    # Flatten transparency onto white; a plain convert('RGB') would turn
+    # transparent areas black (e.g. cut-out product photos).
+    if raw.mode in ('RGBA', 'LA') or (raw.mode == 'P' and 'transparency' in raw.info):
+        raw = raw.convert('RGBA')
+        canvas = Image.new('RGBA', raw.size, (255, 255, 255, 255))
+        canvas.alpha_composite(raw)
+        image = canvas.convert('RGB')
+    else:
+        image = raw.convert('RGB')
     ow, oh = image.size
     print(f'--- {os.path.basename(src_path)} ({ow}x{oh}) ---')
 
