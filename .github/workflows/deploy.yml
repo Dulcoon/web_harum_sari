@@ -1,0 +1,28 @@
+name: 🚀 Deploy to Server via SSH
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Memungkinkan deploy manual dari GitHub Actions UI
+
+jobs:
+  deploy:
+    name: 🚀 Deploy Laravel to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Run Deployment on Server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          command_timeout: 15m
+          script_stop: true
+          script: |
+            cd /home/homelivi/laravel-crud
+            git pull origin main
+            bash deploy-server.sh
